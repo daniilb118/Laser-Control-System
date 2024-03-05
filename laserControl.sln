@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "laserControl", "laserControl\laserControl.csproj", "{AD0A87CF-D63F-4739-A9BE-67CCA1C5A8FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD0A87CF-D63F-4739-A9BE-67CCA1C5A8FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD0A87CF-D63F-4739-A9BE-67CCA1C5A8FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD0A87CF-D63F-4739-A9BE-67CCA1C5A8FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD0A87CF-D63F-4739-A9BE-67CCA1C5A8FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
