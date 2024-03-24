@@ -2,32 +2,24 @@
 
 namespace laserControl
 {
-    public class LaserDevice()
+    public class LaserDevice(IOPort ioPort)
     {
-        private LaserDeviceProfile profile = new();
+        private IOPort ioPort = ioPort;
+        public LaserDeviceProfile Profile { get; set; } = new();
 
         /// <summary>
         /// sends device-side profile properties to the device
         /// </summary>
-        private void sendProfile()
+        public void SendProfile()
         {
-
+            ioPort.Send(LaserDeviceMessage.SetBacklashX(Profile.AxisXBacklash));
+            ioPort.Send(LaserDeviceMessage.SetBacklashY(Profile.AxisYBacklash));
         }
 
-        public LaserDeviceProfile Profile
+        public void AddTarget(Vector2 laserPosition, byte intensity)
         {
-            get => profile;
-            set
-            {
-                profile = value;
-                sendProfile();
-            }
-        }
-
-        public void SetTarget(Vector2 laserPosition, byte intensity)
-        {
-            var target = profile.ToMotorSteps(profile.AngularMotorsPosition(laserPosition));
-            //TODO: send target to a device
+            var target = Profile.ToMotorSteps(Profile.AngularMotorsPosition(laserPosition));
+            ioPort.Send(LaserDeviceMessage.AddTarget(target, intensity));
         }
 
         public UInt32 Speed
@@ -35,8 +27,13 @@ namespace laserControl
             set
             {
                 if (value > Profile.MaxSpeed) return;
-                //TODO: send speed value to a device
+                ioPort.Send(LaserDeviceMessage.SetSpeed(value));
             }
+        }
+
+        public void ResetOrigin()
+        {
+            ioPort.Send(LaserDeviceMessage.ResetOrigin());
         }
 
         public delegate void OnTargetReachDelegate();

@@ -6,7 +6,7 @@
         SetBacklashX = 1,
         SetBacklashY = 2,
         ResetOrigin = 3,
-        SetTarget = 4,
+        AddTarget = 4,
         ClearBuffer = 5,
         Echo = 6,
         TargetReached = 7,
@@ -32,9 +32,9 @@
         {
             return BuildCommand(LaserDeviceMessageType.ResetOrigin, []);
         }
-        public static byte[] SetTarget(Int16[] target, byte intencity)
+        public static byte[] AddTarget(Int16[] target, byte intencity)
         {
-            return BuildCommand(LaserDeviceMessageType.SetTarget, [.. GetTargetBytes(target), intencity]);
+            return BuildCommand(LaserDeviceMessageType.AddTarget, [.. GetTargetBytes(target), intencity]);
         }
         public static byte[] ClearBuffer()
         {

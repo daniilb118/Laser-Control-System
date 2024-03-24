@@ -8,7 +8,7 @@ enum MessageType : uint8_t {
 	SetBacklashX = 1,
 	SetBacklashY = 2,
 	ResetOrigin = 3,
-	SetTarget = 4,
+	AddTarget = 4,
 	ClearBuffer = 5,
 	Echo = 6,
 	TargetReached = 7,
