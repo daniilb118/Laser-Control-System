@@ -5,6 +5,7 @@ namespace laserControl
     public partial class MainForm : Form
     {
         private SerialPort serialPort;
+        private LaserDevice laserDevice;
 
         private void MessageOnError(Action method)
         {
@@ -15,6 +16,9 @@ namespace laserControl
         public MainForm()
         {
             serialPort = new SerialPort();
+
+            laserDevice = new LaserDevice(new IOPort(serialPort, LaserDeviceMessage.Size));
+
             InitializeComponent();
             initializeControls();
         }
