@@ -6,6 +6,7 @@ namespace laserControl
     {
         private SerialPort serialPort;
         private LaserDevice laserDevice;
+        private ScreenVisualizationPanel visualizationPanel;
 
         private void MessageOnError(Action method)
         {
@@ -20,6 +21,9 @@ namespace laserControl
             laserDevice = new LaserDevice(new IOPort(serialPort, LaserDeviceMessage.Size));
 
             InitializeComponent();
+
+            visualizationPanel = new(screenVisualizationPanel, laserDevice, cursorLabel);
+
             initializeControls();
         }
 
@@ -52,6 +56,8 @@ namespace laserControl
             {
                 serialPort.PortName = serialPortSelector.SelectedItem?.ToString();
             };
+
+            splitContainer1.FixedPanel = FixedPanel.Panel1;
         }
     }
 }
