@@ -32,30 +32,35 @@
             serialPortSelector = new ComboBox();
             label1 = new Label();
             splitContainer1 = new SplitContainer();
+            speedSetter = new NumericUpDown();
+            label2 = new Label();
             screenVisualizationPanel = new Panel();
             cursorLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)speedSetter).BeginInit();
             screenVisualizationPanel.SuspendLayout();
             SuspendLayout();
             // 
             // connectionButton
             // 
-            connectionButton.Location = new Point(38, 36);
+            connectionButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            connectionButton.Location = new Point(51, 36);
             connectionButton.Name = "connectionButton";
-            connectionButton.Size = new Size(121, 23);
+            connectionButton.Size = new Size(139, 23);
             connectionButton.TabIndex = 0;
             connectionButton.Text = "Connect";
             connectionButton.UseVisualStyleBackColor = true;
             // 
             // serialPortSelector
             // 
+            serialPortSelector.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             serialPortSelector.FormattingEnabled = true;
-            serialPortSelector.Location = new Point(38, 7);
+            serialPortSelector.Location = new Point(51, 7);
             serialPortSelector.Name = "serialPortSelector";
-            serialPortSelector.Size = new Size(121, 23);
+            serialPortSelector.Size = new Size(139, 23);
             serialPortSelector.TabIndex = 1;
             // 
             // label1
@@ -75,6 +80,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(speedSetter);
+            splitContainer1.Panel1.Controls.Add(label2);
             splitContainer1.Panel1.Controls.Add(label1);
             splitContainer1.Panel1.Controls.Add(connectionButton);
             splitContainer1.Panel1.Controls.Add(serialPortSelector);
@@ -85,6 +92,23 @@
             splitContainer1.Size = new Size(546, 302);
             splitContainer1.SplitterDistance = 193;
             splitContainer1.TabIndex = 3;
+            // 
+            // speedSetter
+            // 
+            speedSetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            speedSetter.Location = new Point(51, 65);
+            speedSetter.Name = "speedSetter";
+            speedSetter.Size = new Size(139, 23);
+            speedSetter.TabIndex = 4;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(3, 67);
+            label2.Name = "label2";
+            label2.Size = new Size(39, 15);
+            label2.TabIndex = 3;
+            label2.Text = "Speed";
             // 
             // screenVisualizationPanel
             // 
@@ -117,6 +141,7 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)speedSetter).EndInit();
             screenVisualizationPanel.ResumeLayout(false);
             screenVisualizationPanel.PerformLayout();
             ResumeLayout(false);
@@ -130,5 +155,7 @@
         private SplitContainer splitContainer1;
         private Panel screenVisualizationPanel;
         private Label cursorLabel;
+        private NumericUpDown speedSetter;
+        private Label label2;
     }
 }

@@ -2,9 +2,22 @@
 
 namespace laserControl
 {
-    public class LaserDevice(IOPort ioPort)
+    public class LaserDevice
     {
-        private IOPort ioPort = ioPort;
+        private IOPort ioPort;
+
+        public LaserDevice(IOPort ioPort)
+        {
+            this.ioPort = ioPort;
+            ioPort.OnReceive = message =>
+            {
+                if (message[5] == (byte)LaserDeviceMessageType.TargetReached)
+                {
+                    OnTargetReach();
+                }
+            };
+        }
+
         public LaserDeviceProfile Profile { get; set; } = new();
 
         /// <summary>
@@ -34,6 +47,11 @@ namespace laserControl
         public void ResetOrigin()
         {
             ioPort.Send(LaserDeviceMessage.ResetOrigin());
+        }
+
+        public void ClearBuffer()
+        {
+            ioPort.Send(LaserDeviceMessage.ClearBuffer());
         }
 
         public delegate void OnTargetReachDelegate();

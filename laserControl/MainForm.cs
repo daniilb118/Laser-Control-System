@@ -24,6 +24,11 @@ namespace laserControl
 
             visualizationPanel = new(screenVisualizationPanel, laserDevice, cursorLabel);
 
+            laserDevice.OnTargetReach = () =>
+            {
+                visualizationPanel.LaserPosition = visualizationPanel.TargetLaserPosition;
+            };
+
             initializeControls();
         }
 
@@ -55,6 +60,20 @@ namespace laserControl
             serialPortSelector.SelectedIndexChanged += (object? sender, EventArgs e) =>
             {
                 serialPort.PortName = serialPortSelector.SelectedItem?.ToString();
+            };
+
+            screenVisualizationPanel.MouseDown += (object? sender, MouseEventArgs e) =>
+            {
+                if (!serialPort.IsOpen) return;
+                var targetPos = visualizationPanel.GetLaserPosition(e.Location);
+                laserDevice.AddTarget(targetPos, 0);
+                visualizationPanel.TargetLaserPosition = targetPos;
+            };
+
+            speedSetter.ValueChanged += (object? sender, EventArgs e) =>
+            {
+                if (!serialPort.IsOpen) return;
+                laserDevice.Speed = (uint)speedSetter.Value;
             };
 
             splitContainer1.FixedPanel = FixedPanel.Panel1;

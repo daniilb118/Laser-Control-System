@@ -6,8 +6,9 @@ constexpr int baudRate = 9600;
 constexpr auto driverType = STEPPER4WIRE_HALF; //STEPPER2WIRE, STEPPER4WIRE, STEPPER4WIRE_HALF are available (details in "GyverStepper/src/StepperCore.h")
 
 void processMessage(LaserDeviceMessage);
+void onTarget();
 
-using Planner = GPlanner2<driverType, 2>;
+using Planner = GPlanner2<driverType, 2, onTarget>;
 using StepperT = Stepper<driverType>;
 
 IOPort<LaserDeviceMessage> ioPort {processMessage};
@@ -27,7 +28,9 @@ void initializePlanner(Planner& planner) {
 }
 
 void onTarget() {
-
+	LaserDeviceMessage message;
+	message.type = MessageType::TargetReached;
+	ioPort.send(message);
 }
 
 void processMessage(LaserDeviceMessage message) {
