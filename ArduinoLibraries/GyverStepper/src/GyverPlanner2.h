@@ -92,8 +92,10 @@
 
 #define GP_MIN_US 300000  // период, длиннее которого мотор можно резко тормозить или менять скорость
 
+using OnTarget = void (*)();
+
 // создать планировщик с драйверами типа DRV и количеством осей AXLES
-template <GS_driverType _DRV, uint8_t _AXLES, uint8_t _BUF = 32>
+template <GS_driverType _DRV, uint8_t _AXLES, OnTarget onTarget, uint8_t _BUF = 32>
 class GPlanner2 {
    public:
     GPlanner2() {
@@ -232,6 +234,10 @@ class GPlanner2 {
         status = 5;
     }
 
+    bool empty() {
+        return bufL.available() < 2;
+    }
+
     // ============================= TICK =============================
     // тикер движения. Вернёт false если мотор остановлен. ~20..65us + ~10мс при пересчёте блока
     bool tick() {
@@ -331,7 +337,7 @@ class GPlanner2 {
                 readyF = true;
                 status = 0;
             } else status = 1;  // иначе проверяем буфер
-            next();
+            nextTrigger();
         }
         us >>= shift;
         return (status > 1);
@@ -465,6 +471,11 @@ class GPlanner2 {
         blockCalc = (blockCalc + micros() - calcTime) / 2;
     }
 
+    void nextTrigger() {
+        onTarget();
+        next();
+    }
+
     void next() {
         for (int i = 0; i < _AXLES; i++) bufP[i].next();
         bufL.next();
@@ -489,7 +500,7 @@ class GPlanner2 {
 
         if (S == 0) {    // путь == 0, мы никуда не едем
             status = 1;  // на буфер
-            next();
+            nextTrigger();
             return 0;
         }
 
