@@ -15,6 +15,17 @@ namespace laserControl
         private Vector2 laserPosition;
         private Vector2 targetLaserPosition;
         private Cursor cursor;
+        private Image? background = null;
+
+        public Image? Background
+        {
+            get => background;
+            set
+            {
+                background = value;
+                redraw();
+            }
+        }
 
         public ScreenVisualizationPanel(Panel laserControlPanel, LaserDevice laserDevice, Label label)
         {
@@ -93,6 +104,10 @@ namespace laserControl
                 coordinatesPanel.GetPanelPoint(new Vector2(-1, 1)),
                 new Size(zoneSize, zoneSize)
             );
+            if (background != null)
+            {
+                graphics.DrawImage(background, zoneRect);
+            }
             graphics.DrawRectangle(new Pen(Brushes.LightGray), zoneRect);
             DrawCenter(graphics);
         }

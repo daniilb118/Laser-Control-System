@@ -36,12 +36,23 @@
             label2 = new Label();
             screenVisualizationPanel = new Panel();
             cursorLabel = new Label();
+            menuStrip = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            importDeviceProfileToolStripMenuItem = new ToolStripMenuItem();
+            exportDeviceProfileToolStripMenuItem = new ToolStripMenuItem();
+            optionsToolStripMenuItem = new ToolStripMenuItem();
+            chooseBackgroundToolStripMenuItem = new ToolStripMenuItem();
+            clearBackgroundToolStripMenuItem = new ToolStripMenuItem();
+            actionToolStripMenuItem = new ToolStripMenuItem();
+            moveTo00ToolStripMenuItem = new ToolStripMenuItem();
+            resetOriginToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)speedSetter).BeginInit();
             screenVisualizationPanel.SuspendLayout();
+            menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // connectionButton
@@ -75,7 +86,7 @@
             // splitContainer1
             // 
             splitContainer1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            splitContainer1.Location = new Point(12, 12);
+            splitContainer1.Location = new Point(12, 27);
             splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -89,7 +100,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(screenVisualizationPanel);
-            splitContainer1.Size = new Size(546, 302);
+            splitContainer1.Size = new Size(546, 287);
             splitContainer1.SplitterDistance = 193;
             splitContainer1.TabIndex = 3;
             // 
@@ -116,7 +127,7 @@
             screenVisualizationPanel.Controls.Add(cursorLabel);
             screenVisualizationPanel.Location = new Point(3, 3);
             screenVisualizationPanel.Name = "screenVisualizationPanel";
-            screenVisualizationPanel.Size = new Size(343, 296);
+            screenVisualizationPanel.Size = new Size(343, 281);
             screenVisualizationPanel.TabIndex = 2;
             // 
             // cursorLabel
@@ -128,12 +139,80 @@
             cursorLabel.TabIndex = 2;
             cursorLabel.Text = "label2";
             // 
+            // menuStrip
+            // 
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, optionsToolStripMenuItem, actionToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(570, 24);
+            menuStrip.TabIndex = 4;
+            menuStrip.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importDeviceProfileToolStripMenuItem, exportDeviceProfileToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(37, 20);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // importDeviceProfileToolStripMenuItem
+            // 
+            importDeviceProfileToolStripMenuItem.Name = "importDeviceProfileToolStripMenuItem";
+            importDeviceProfileToolStripMenuItem.Size = new Size(185, 22);
+            importDeviceProfileToolStripMenuItem.Text = "Import Device Profile";
+            // 
+            // exportDeviceProfileToolStripMenuItem
+            // 
+            exportDeviceProfileToolStripMenuItem.Name = "exportDeviceProfileToolStripMenuItem";
+            exportDeviceProfileToolStripMenuItem.Size = new Size(185, 22);
+            exportDeviceProfileToolStripMenuItem.Text = "Export Device Profile";
+            // 
+            // optionsToolStripMenuItem
+            // 
+            optionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { chooseBackgroundToolStripMenuItem, clearBackgroundToolStripMenuItem });
+            optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            optionsToolStripMenuItem.Size = new Size(61, 20);
+            optionsToolStripMenuItem.Text = "Options";
+            // 
+            // chooseBackgroundToolStripMenuItem
+            // 
+            chooseBackgroundToolStripMenuItem.Name = "chooseBackgroundToolStripMenuItem";
+            chooseBackgroundToolStripMenuItem.Size = new Size(181, 22);
+            chooseBackgroundToolStripMenuItem.Text = "Choose Background";
+            // 
+            // clearBackgroundToolStripMenuItem
+            // 
+            clearBackgroundToolStripMenuItem.Name = "clearBackgroundToolStripMenuItem";
+            clearBackgroundToolStripMenuItem.Size = new Size(181, 22);
+            clearBackgroundToolStripMenuItem.Text = "Clear Background";
+            // 
+            // actionToolStripMenuItem
+            // 
+            actionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { moveTo00ToolStripMenuItem, resetOriginToolStripMenuItem });
+            actionToolStripMenuItem.Name = "actionToolStripMenuItem";
+            actionToolStripMenuItem.Size = new Size(54, 20);
+            actionToolStripMenuItem.Text = "Action";
+            // 
+            // moveTo00ToolStripMenuItem
+            // 
+            moveTo00ToolStripMenuItem.Name = "moveTo00ToolStripMenuItem";
+            moveTo00ToolStripMenuItem.Size = new Size(147, 22);
+            moveTo00ToolStripMenuItem.Text = "Move to (0; 0)";
+            // 
+            // resetOriginToolStripMenuItem
+            // 
+            resetOriginToolStripMenuItem.Name = "resetOriginToolStripMenuItem";
+            resetOriginToolStripMenuItem.Size = new Size(147, 22);
+            resetOriginToolStripMenuItem.Text = "Reset Origin";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(570, 326);
             Controls.Add(splitContainer1);
+            Controls.Add(menuStrip);
+            MainMenuStrip = menuStrip;
             Name = "MainForm";
             Text = "Laser Control";
             splitContainer1.Panel1.ResumeLayout(false);
@@ -144,7 +223,10 @@
             ((System.ComponentModel.ISupportInitialize)speedSetter).EndInit();
             screenVisualizationPanel.ResumeLayout(false);
             screenVisualizationPanel.PerformLayout();
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -157,5 +239,15 @@
         private Label cursorLabel;
         private NumericUpDown speedSetter;
         private Label label2;
+        private MenuStrip menuStrip;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem importDeviceProfileToolStripMenuItem;
+        private ToolStripMenuItem exportDeviceProfileToolStripMenuItem;
+        private ToolStripMenuItem optionsToolStripMenuItem;
+        private ToolStripMenuItem chooseBackgroundToolStripMenuItem;
+        private ToolStripMenuItem clearBackgroundToolStripMenuItem;
+        private ToolStripMenuItem actionToolStripMenuItem;
+        private ToolStripMenuItem moveTo00ToolStripMenuItem;
+        private ToolStripMenuItem resetOriginToolStripMenuItem;
     }
 }

@@ -30,6 +30,7 @@ namespace laserControl
             };
 
             initializeControls();
+            initializeStripMenu();
         }
 
         private void initializeControls()
@@ -77,6 +78,21 @@ namespace laserControl
             };
 
             splitContainer1.FixedPanel = FixedPanel.Panel1;
+        }
+
+        private void initializeStripMenu()
+        {
+            menuStrip.BackColor = Color.Transparent;
+
+            chooseBackgroundToolStripMenuItem.Click += (object? sender, EventArgs e) =>
+            {
+                OpenFileDialog backgroundOpenDialog = new();
+                backgroundOpenDialog.Filter = "Image Files (*.bmp;*.jpg;*.jpeg,*.png)|*.BMP;*.JPG;*.JPEG;*.PNG";
+                if (backgroundOpenDialog.ShowDialog() != DialogResult.OK) return;
+                visualizationPanel.Background = new Bitmap(backgroundOpenDialog.FileName);
+            };
+
+            clearBackgroundToolStripMenuItem.Click += (object? sender, EventArgs e) => visualizationPanel.Background = null;
         }
     }
 }
