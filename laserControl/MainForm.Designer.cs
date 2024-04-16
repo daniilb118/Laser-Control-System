@@ -46,6 +46,7 @@
             actionToolStripMenuItem = new ToolStripMenuItem();
             moveTo00ToolStripMenuItem = new ToolStripMenuItem();
             resetOriginToolStripMenuItem = new ToolStripMenuItem();
+            configureDeviceToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -169,7 +170,7 @@
             // 
             // optionsToolStripMenuItem
             // 
-            optionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { chooseBackgroundToolStripMenuItem, clearBackgroundToolStripMenuItem });
+            optionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { chooseBackgroundToolStripMenuItem, clearBackgroundToolStripMenuItem, configureDeviceToolStripMenuItem });
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             optionsToolStripMenuItem.Size = new Size(61, 20);
             optionsToolStripMenuItem.Text = "Options";
@@ -196,14 +197,20 @@
             // moveTo00ToolStripMenuItem
             // 
             moveTo00ToolStripMenuItem.Name = "moveTo00ToolStripMenuItem";
-            moveTo00ToolStripMenuItem.Size = new Size(147, 22);
+            moveTo00ToolStripMenuItem.Size = new Size(180, 22);
             moveTo00ToolStripMenuItem.Text = "Move to (0; 0)";
             // 
             // resetOriginToolStripMenuItem
             // 
             resetOriginToolStripMenuItem.Name = "resetOriginToolStripMenuItem";
-            resetOriginToolStripMenuItem.Size = new Size(147, 22);
+            resetOriginToolStripMenuItem.Size = new Size(180, 22);
             resetOriginToolStripMenuItem.Text = "Reset Origin";
+            // 
+            // configureDeviceToolStripMenuItem
+            // 
+            configureDeviceToolStripMenuItem.Name = "configureDeviceToolStripMenuItem";
+            configureDeviceToolStripMenuItem.Size = new Size(181, 22);
+            configureDeviceToolStripMenuItem.Text = "Configure Device";
             // 
             // MainForm
             // 
@@ -249,5 +256,6 @@
         private ToolStripMenuItem actionToolStripMenuItem;
         private ToolStripMenuItem moveTo00ToolStripMenuItem;
         private ToolStripMenuItem resetOriginToolStripMenuItem;
+        private ToolStripMenuItem configureDeviceToolStripMenuItem;
     }
 }

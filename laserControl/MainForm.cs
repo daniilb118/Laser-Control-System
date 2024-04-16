@@ -1,4 +1,5 @@
 using System.IO.Ports;
+using System.Text.Json;
 
 namespace laserControl
 {
@@ -31,6 +32,11 @@ namespace laserControl
 
             initializeControls();
             initializeStripMenu();
+        }
+
+        private void onProfileUpdate()
+        {
+            if (serialPort.IsOpen) { laserDevice.SendProfile(); }
         }
 
         private void initializeControls()
@@ -84,6 +90,30 @@ namespace laserControl
         {
             menuStrip.BackColor = Color.Transparent;
 
+            importDeviceProfileToolStripMenuItem.Click += (object? sender, EventArgs e) =>
+            {
+                OpenFileDialog fileDialog = new();
+                fileDialog.Filter = "Json files (*.json)|*.json|All files (*.*)|*.*";
+                MessageOnError(() =>
+                {
+                    if (fileDialog.ShowDialog() != DialogResult.OK) return;
+                    var profile = JsonSerializer.Deserialize<LaserDeviceProfile>(File.ReadAllText(fileDialog.FileName));
+                    if (profile == null) throw new Exception("Couldn't read device profile.");
+                    laserDevice.Profile = profile;
+                });
+            };
+
+            exportDeviceProfileToolStripMenuItem.Click += (object? sender, EventArgs e) =>
+            {
+                SaveFileDialog fileDialog = new();
+                fileDialog.Filter = "Json files (*.json)|*.json|All files (*.*)|*.*";
+                MessageOnError(() =>
+                {
+                    if (fileDialog.ShowDialog() != DialogResult.OK) return;
+                    File.WriteAllText(fileDialog.FileName, JsonSerializer.Serialize(laserDevice.Profile));
+                });
+            };
+
             chooseBackgroundToolStripMenuItem.Click += (object? sender, EventArgs e) =>
             {
                 OpenFileDialog backgroundOpenDialog = new();
@@ -93,6 +123,17 @@ namespace laserControl
             };
 
             clearBackgroundToolStripMenuItem.Click += (object? sender, EventArgs e) => visualizationPanel.Background = null;
+
+            configureDeviceToolStripMenuItem.Click += (object? sender, EventArgs e) => {
+                DeviceConfigurationForm form = new(laserDevice.Profile);
+                form.OnApply += onProfileUpdate;
+                form.Show();
+            };
+
+            moveTo00ToolStripMenuItem.Click += (object? sender, EventArgs e) =>
+            {
+                laserDevice.AddTarget(new(0, 0), 0);
+            };
         }
     }
 }
