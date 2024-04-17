@@ -32,6 +32,8 @@
             serialPortSelector = new ComboBox();
             label1 = new Label();
             splitContainer1 = new SplitContainer();
+            label3 = new Label();
+            intensitySetter = new NumericUpDown();
             speedSetter = new NumericUpDown();
             label2 = new Label();
             screenVisualizationPanel = new Panel();
@@ -43,14 +45,15 @@
             optionsToolStripMenuItem = new ToolStripMenuItem();
             chooseBackgroundToolStripMenuItem = new ToolStripMenuItem();
             clearBackgroundToolStripMenuItem = new ToolStripMenuItem();
+            configureDeviceToolStripMenuItem = new ToolStripMenuItem();
             actionToolStripMenuItem = new ToolStripMenuItem();
             moveTo00ToolStripMenuItem = new ToolStripMenuItem();
             resetOriginToolStripMenuItem = new ToolStripMenuItem();
-            configureDeviceToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)intensitySetter).BeginInit();
             ((System.ComponentModel.ISupportInitialize)speedSetter).BeginInit();
             screenVisualizationPanel.SuspendLayout();
             menuStrip.SuspendLayout();
@@ -59,9 +62,9 @@
             // connectionButton
             // 
             connectionButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            connectionButton.Location = new Point(51, 36);
+            connectionButton.Location = new Point(74, 36);
             connectionButton.Name = "connectionButton";
-            connectionButton.Size = new Size(139, 23);
+            connectionButton.Size = new Size(116, 23);
             connectionButton.TabIndex = 0;
             connectionButton.Text = "Connect";
             connectionButton.UseVisualStyleBackColor = true;
@@ -70,9 +73,9 @@
             // 
             serialPortSelector.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             serialPortSelector.FormattingEnabled = true;
-            serialPortSelector.Location = new Point(51, 7);
+            serialPortSelector.Location = new Point(74, 7);
             serialPortSelector.Name = "serialPortSelector";
-            serialPortSelector.Size = new Size(139, 23);
+            serialPortSelector.Size = new Size(116, 23);
             serialPortSelector.TabIndex = 1;
             // 
             // label1
@@ -92,6 +95,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(label3);
+            splitContainer1.Panel1.Controls.Add(intensitySetter);
             splitContainer1.Panel1.Controls.Add(speedSetter);
             splitContainer1.Panel1.Controls.Add(label2);
             splitContainer1.Panel1.Controls.Add(label1);
@@ -105,12 +110,30 @@
             splitContainer1.SplitterDistance = 193;
             splitContainer1.TabIndex = 3;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(3, 96);
+            label3.Name = "label3";
+            label3.Size = new Size(52, 15);
+            label3.TabIndex = 6;
+            label3.Text = "Intensity";
+            // 
+            // intensitySetter
+            // 
+            intensitySetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            intensitySetter.Location = new Point(74, 94);
+            intensitySetter.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            intensitySetter.Name = "intensitySetter";
+            intensitySetter.Size = new Size(116, 23);
+            intensitySetter.TabIndex = 5;
+            // 
             // speedSetter
             // 
             speedSetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            speedSetter.Location = new Point(51, 65);
+            speedSetter.Location = new Point(74, 65);
             speedSetter.Name = "speedSetter";
-            speedSetter.Size = new Size(139, 23);
+            speedSetter.Size = new Size(116, 23);
             speedSetter.TabIndex = 4;
             // 
             // label2
@@ -187,6 +210,12 @@
             clearBackgroundToolStripMenuItem.Size = new Size(181, 22);
             clearBackgroundToolStripMenuItem.Text = "Clear Background";
             // 
+            // configureDeviceToolStripMenuItem
+            // 
+            configureDeviceToolStripMenuItem.Name = "configureDeviceToolStripMenuItem";
+            configureDeviceToolStripMenuItem.Size = new Size(181, 22);
+            configureDeviceToolStripMenuItem.Text = "Configure Device";
+            // 
             // actionToolStripMenuItem
             // 
             actionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { moveTo00ToolStripMenuItem, resetOriginToolStripMenuItem });
@@ -197,20 +226,14 @@
             // moveTo00ToolStripMenuItem
             // 
             moveTo00ToolStripMenuItem.Name = "moveTo00ToolStripMenuItem";
-            moveTo00ToolStripMenuItem.Size = new Size(180, 22);
+            moveTo00ToolStripMenuItem.Size = new Size(147, 22);
             moveTo00ToolStripMenuItem.Text = "Move to (0; 0)";
             // 
             // resetOriginToolStripMenuItem
             // 
             resetOriginToolStripMenuItem.Name = "resetOriginToolStripMenuItem";
-            resetOriginToolStripMenuItem.Size = new Size(180, 22);
+            resetOriginToolStripMenuItem.Size = new Size(147, 22);
             resetOriginToolStripMenuItem.Text = "Reset Origin";
-            // 
-            // configureDeviceToolStripMenuItem
-            // 
-            configureDeviceToolStripMenuItem.Name = "configureDeviceToolStripMenuItem";
-            configureDeviceToolStripMenuItem.Size = new Size(181, 22);
-            configureDeviceToolStripMenuItem.Text = "Configure Device";
             // 
             // MainForm
             // 
@@ -227,6 +250,7 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)intensitySetter).EndInit();
             ((System.ComponentModel.ISupportInitialize)speedSetter).EndInit();
             screenVisualizationPanel.ResumeLayout(false);
             screenVisualizationPanel.PerformLayout();
@@ -257,5 +281,7 @@
         private ToolStripMenuItem moveTo00ToolStripMenuItem;
         private ToolStripMenuItem resetOriginToolStripMenuItem;
         private ToolStripMenuItem configureDeviceToolStripMenuItem;
+        private Label label3;
+        private NumericUpDown intensitySetter;
     }
 }
