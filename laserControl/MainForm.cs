@@ -73,7 +73,7 @@ namespace laserControl
             {
                 if (!serialPort.IsOpen) return;
                 var targetPos = visualizationPanel.GetLaserPosition(e.Location);
-                laserDevice.AddTarget(targetPos, 0);
+                laserDevice.AddTarget(new(targetPos.X, targetPos.Y, 0));
                 visualizationPanel.TargetLaserPosition = targetPos;
             };
 
@@ -132,7 +132,7 @@ namespace laserControl
 
             moveTo00ToolStripMenuItem.Click += (object? sender, EventArgs e) =>
             {
-                laserDevice.AddTarget(new(0, 0), 0);
+                laserDevice.AddTarget(new(0, 0, 0));
             };
         }
     }

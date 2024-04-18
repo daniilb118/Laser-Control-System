@@ -24,10 +24,12 @@ namespace laserControl
             return new Vector2((float)alpha, (float)beta);
         }
 
-        public Int16[] ToMotorSteps(Vector2 motorAngle)
+        public Int16[] DiscreteMotorsPosition(Vector2 laserPosition) => ToMotorSteps(AngularMotorsPosition(laserPosition));
+
+        private Int16[] ToMotorSteps(Vector2 angularMotorsPosition)
         {
             var origin = AngularMotorsPosition(new Vector2(0, 0));
-            var result = (motorAngle - origin) * (float)(MotorStepsPerRotation / (Math.PI * 2));
+            var result = (angularMotorsPosition - origin) * (float)(MotorStepsPerRotation / (Math.PI * 2));
             return [Convert.ToInt16(IsAxisXInverted ? -result.X : result.X), Convert.ToInt16(IsAxisYInverted ? -result.Y : result.Y)];
         }
 

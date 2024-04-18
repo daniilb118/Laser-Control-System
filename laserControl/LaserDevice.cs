@@ -29,10 +29,10 @@ namespace laserControl
             ioPort.Send(LaserDeviceMessage.SetBacklashY(Profile.AxisYBacklash));
         }
 
-        public void AddTarget(Vector2 laserPosition, byte intensity)
+        public void AddTarget(Target target)
         {
-            var target = Profile.ToMotorSteps(Profile.AngularMotorsPosition(laserPosition));
-            ioPort.Send(LaserDeviceMessage.AddTarget(target, intensity));
+            var motorsTarget = Profile.DiscreteMotorsPosition(target.Position);
+            ioPort.Send(LaserDeviceMessage.AddTarget(motorsTarget, (byte)(target.Intensity * 255)));
         }
 
         public UInt32 Speed
@@ -54,11 +54,34 @@ namespace laserControl
             ioPort.Send(LaserDeviceMessage.ClearBuffer());
         }
 
+        private int trajectoryBufferLength => 32;
+
+        private int bufferedTrajectoryLength = 0;
+
         public delegate void OnTargetReachDelegate();
 
         /// <summary>
         /// called when device physically reaches target of setted trajectory
         /// </summary>
         public OnTargetReachDelegate OnTargetReach { get; set; } = () => { };
+
+        public class Target(float x, float y, float intensity)
+        {
+            public Target(Vector2 position, float intensity) :
+                this(position.X, position.Y, intensity)
+            { }
+            public float X { get; set; } = x;
+            public float Y { get; set; } = y;
+            public float Intensity { get; set; } = intensity;
+            public Vector2 Position
+            {
+                get => new Vector2(X, Y);
+                set
+                {
+                    X = value.X;
+                    Y = value.Y;
+                }
+            }
+        }
     }
 }
