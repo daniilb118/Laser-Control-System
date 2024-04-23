@@ -32,6 +32,7 @@
             serialPortSelector = new ComboBox();
             label1 = new Label();
             splitContainer1 = new SplitContainer();
+            targetGridView = new DataGridView();
             label3 = new Label();
             intensitySetter = new NumericUpDown();
             speedSetter = new NumericUpDown();
@@ -53,6 +54,7 @@
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)targetGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)intensitySetter).BeginInit();
             ((System.ComponentModel.ISupportInitialize)speedSetter).BeginInit();
             screenVisualizationPanel.SuspendLayout();
@@ -64,7 +66,7 @@
             connectionButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             connectionButton.Location = new Point(74, 36);
             connectionButton.Name = "connectionButton";
-            connectionButton.Size = new Size(116, 23);
+            connectionButton.Size = new Size(117, 23);
             connectionButton.TabIndex = 0;
             connectionButton.Text = "Connect";
             connectionButton.UseVisualStyleBackColor = true;
@@ -75,7 +77,7 @@
             serialPortSelector.FormattingEnabled = true;
             serialPortSelector.Location = new Point(74, 7);
             serialPortSelector.Name = "serialPortSelector";
-            serialPortSelector.Size = new Size(116, 23);
+            serialPortSelector.Size = new Size(117, 23);
             serialPortSelector.TabIndex = 1;
             // 
             // label1
@@ -95,6 +97,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(targetGridView);
             splitContainer1.Panel1.Controls.Add(label3);
             splitContainer1.Panel1.Controls.Add(intensitySetter);
             splitContainer1.Panel1.Controls.Add(speedSetter);
@@ -106,18 +109,28 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(screenVisualizationPanel);
-            splitContainer1.Size = new Size(546, 287);
-            splitContainer1.SplitterDistance = 193;
+            splitContainer1.Size = new Size(551, 363);
+            splitContainer1.SplitterDistance = 194;
             splitContainer1.TabIndex = 3;
+            // 
+            // targetGridView
+            // 
+            targetGridView.AllowUserToAddRows = false;
+            targetGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            targetGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            targetGridView.Location = new Point(3, 123);
+            targetGridView.Name = "targetGridView";
+            targetGridView.Size = new Size(188, 237);
+            targetGridView.TabIndex = 7;
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Location = new Point(3, 96);
             label3.Name = "label3";
-            label3.Size = new Size(52, 15);
+            label3.Size = new Size(65, 15);
             label3.TabIndex = 6;
-            label3.Text = "Intensity";
+            label3.Text = "Intensity %";
             // 
             // intensitySetter
             // 
@@ -125,7 +138,7 @@
             intensitySetter.Location = new Point(74, 94);
             intensitySetter.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             intensitySetter.Name = "intensitySetter";
-            intensitySetter.Size = new Size(116, 23);
+            intensitySetter.Size = new Size(117, 23);
             intensitySetter.TabIndex = 5;
             // 
             // speedSetter
@@ -133,7 +146,7 @@
             speedSetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             speedSetter.Location = new Point(74, 65);
             speedSetter.Name = "speedSetter";
-            speedSetter.Size = new Size(116, 23);
+            speedSetter.Size = new Size(117, 23);
             speedSetter.TabIndex = 4;
             // 
             // label2
@@ -151,7 +164,7 @@
             screenVisualizationPanel.Controls.Add(cursorLabel);
             screenVisualizationPanel.Location = new Point(3, 3);
             screenVisualizationPanel.Name = "screenVisualizationPanel";
-            screenVisualizationPanel.Size = new Size(343, 281);
+            screenVisualizationPanel.Size = new Size(347, 357);
             screenVisualizationPanel.TabIndex = 2;
             // 
             // cursorLabel
@@ -168,7 +181,7 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, optionsToolStripMenuItem, actionToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(570, 24);
+            menuStrip.Size = new Size(575, 24);
             menuStrip.TabIndex = 4;
             menuStrip.Text = "menuStrip1";
             // 
@@ -239,7 +252,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(570, 326);
+            ClientSize = new Size(575, 402);
             Controls.Add(splitContainer1);
             Controls.Add(menuStrip);
             MainMenuStrip = menuStrip;
@@ -250,6 +263,7 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)targetGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)intensitySetter).EndInit();
             ((System.ComponentModel.ISupportInitialize)speedSetter).EndInit();
             screenVisualizationPanel.ResumeLayout(false);
@@ -283,5 +297,6 @@
         private ToolStripMenuItem configureDeviceToolStripMenuItem;
         private Label label3;
         private NumericUpDown intensitySetter;
+        private DataGridView targetGridView;
     }
 }
