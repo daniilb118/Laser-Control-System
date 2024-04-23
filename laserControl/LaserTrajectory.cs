@@ -12,12 +12,12 @@ namespace laserControl
 
         private DataGridView targetGridView;
         private DataTable targetListSource = new();
-        private float positionMultiplier;
+        private float screenSize;
         private List<LaserDevice.Target> normalizedTargets;
 
-        public LaserTrajectory(DataGridView targetGridView, float positionMultiplier)
+        public LaserTrajectory(DataGridView targetGridView, float screenSize)
         {
-            this.positionMultiplier = positionMultiplier;
+            this.screenSize = screenSize;
 
             initializeDataGridView(targetGridView);
             initialize([]);
@@ -35,12 +35,12 @@ namespace laserControl
             }
         }
 
-        public float PositionMultiplier
+        public float ScreenSize
         {
-            get => positionMultiplier;
+            get => screenSize;
             set
             {
-                positionMultiplier = value;
+                screenSize = value;
                 initialize(normalizedTargets);
             }
         }
@@ -79,7 +79,7 @@ namespace laserControl
             return row;
         }
 
-        private float clampScaled(float x) => Math.Clamp(x, -PositionMultiplier, PositionMultiplier);
+        private float clampScaled(float x) => Math.Clamp(x, -ScreenSize, ScreenSize);
 
         private float clampNormalized(float x) => Math.Clamp(x, -1, 1);
 
@@ -106,14 +106,14 @@ namespace laserControl
 
             foreach (var target in normalizedTargets)
             {
-                targetListSource.Rows.Add(dataRowFromTarget(new(target.Position * PositionMultiplier, target.Intensity)));
+                targetListSource.Rows.Add(dataRowFromTarget(new(target.Position * ScreenSize, target.Intensity)));
             }
 
             targetListSource.RowChanged += (object sender, DataRowChangeEventArgs e) => {
                 var row = e.Row;
                 var index = row.Table.Rows.IndexOf(row);
                 var normalizedTarget = targetFromDataRow(row);
-                normalizedTarget.Position /= PositionMultiplier;
+                normalizedTarget.Position /= ScreenSize;
 
                 var isRowNew = normalizedTargets.Count < targetListSource.Rows.Count;
 

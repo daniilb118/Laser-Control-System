@@ -7,7 +7,7 @@ namespace laserControl
     {
         private SerialPort serialPort;
         private LaserDevice laserDevice;
-        private ScreenVisualizationPanel visualizationPanel;
+        private LaserTrajectoryEditor laserTrajectoryEditor;
 
         private void MessageOnError(Action method)
         {
@@ -23,11 +23,11 @@ namespace laserControl
 
             InitializeComponent();
 
-            visualizationPanel = new(screenVisualizationPanel, laserDevice, cursorLabel);
+            laserTrajectoryEditor = new(laserDevice, targetGridView, screenVisualizationPanel, cursorLabel, intensitySetter);
 
             laserDevice.OnTargetReach = () =>
             {
-                visualizationPanel.LaserPosition = visualizationPanel.TargetLaserPosition;
+                laserTrajectoryEditor.LaserPosition = laserTrajectoryEditor.TargetLaserPosition;
             };
 
             initializeControls();
@@ -36,11 +36,18 @@ namespace laserControl
 
         private void onProfileUpdate()
         {
+            laserTrajectoryEditor.ScreenSize = laserDevice.Profile.ScreenSize;
             if (serialPort.IsOpen) { laserDevice.SendProfile(); }
         }
 
         private void initializeControls()
         {
+            laserTrajectoryEditor.OnUserSelectedTargetChanged += (LaserDevice.Target target) =>
+            {
+                if (!serialPort.IsOpen) return;
+                laserDevice.AddTarget(target);
+            };
+
             connectionButton.Click += (object? sender, EventArgs e) =>
             {
                 MessageOnError(() =>
@@ -67,14 +74,6 @@ namespace laserControl
             serialPortSelector.SelectedIndexChanged += (object? sender, EventArgs e) =>
             {
                 serialPort.PortName = serialPortSelector.SelectedItem?.ToString();
-            };
-
-            screenVisualizationPanel.MouseDown += (object? sender, MouseEventArgs e) =>
-            {
-                if (!serialPort.IsOpen) return;
-                var targetPos = visualizationPanel.GetLaserPosition(e.Location);
-                laserDevice.AddTarget(new(targetPos.X, targetPos.Y, 0));
-                visualizationPanel.TargetLaserPosition = targetPos;
             };
 
             speedSetter.ValueChanged += (object? sender, EventArgs e) =>
@@ -119,10 +118,10 @@ namespace laserControl
                 OpenFileDialog backgroundOpenDialog = new();
                 backgroundOpenDialog.Filter = "Image Files (*.bmp;*.jpg;*.jpeg,*.png)|*.BMP;*.JPG;*.JPEG;*.PNG";
                 if (backgroundOpenDialog.ShowDialog() != DialogResult.OK) return;
-                visualizationPanel.Background = new Bitmap(backgroundOpenDialog.FileName);
+                laserTrajectoryEditor.Background = new Bitmap(backgroundOpenDialog.FileName);
             };
 
-            clearBackgroundToolStripMenuItem.Click += (object? sender, EventArgs e) => visualizationPanel.Background = null;
+            clearBackgroundToolStripMenuItem.Click += (object? sender, EventArgs e) => laserTrajectoryEditor.Background = null;
 
             configureDeviceToolStripMenuItem.Click += (object? sender, EventArgs e) => {
                 DeviceConfigurationForm form = new(laserDevice.Profile);
