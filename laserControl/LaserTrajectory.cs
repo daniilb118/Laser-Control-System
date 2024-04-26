@@ -23,6 +23,12 @@ namespace laserControl
             initialize([]);
         }
 
+        public List<LaserDevice.Target> NormalizedTargets
+        {
+            get => normalizedTargets;
+            set => initialize(value);
+        }
+
         public int SelectedIndex
         {
             get => targetGridView.CurrentRow.Index;
@@ -41,7 +47,7 @@ namespace laserControl
             set
             {
                 screenSize = value;
-                initialize(normalizedTargets);
+                initialize(NormalizedTargets);
             }
         }
 
@@ -86,7 +92,7 @@ namespace laserControl
         private void initialize(List<LaserDevice.Target> normalizedTargets)
         {
             this.normalizedTargets = normalizedTargets;
-            if (normalizedTargets.Count == 0) normalizedTargets.Add(new(0, 0, 0));
+            if (NormalizedTargets.Count == 0) NormalizedTargets.Add(new(0, 0, 0));
 
             initializeTargeListSource();
 
@@ -104,7 +110,7 @@ namespace laserControl
             targetListSource.Columns.Add(new DataColumn("Y", typeof(float)));
             targetListSource.Columns.Add(new DataColumn("I", typeof(float)));
 
-            foreach (var target in normalizedTargets)
+            foreach (var target in NormalizedTargets)
             {
                 targetListSource.Rows.Add(dataRowFromTarget(new(target.Position * ScreenSize, target.Intensity)));
             }
@@ -115,10 +121,10 @@ namespace laserControl
                 var normalizedTarget = targetFromDataRow(row);
                 normalizedTarget.Position /= ScreenSize;
 
-                var isRowNew = normalizedTargets.Count < targetListSource.Rows.Count;
+                var isRowNew = NormalizedTargets.Count < targetListSource.Rows.Count;
 
-                if (isRowNew) { normalizedTargets.Insert(index, normalizedTarget); }
-                else { normalizedTargets[index] = normalizedTarget; }
+                if (isRowNew) { NormalizedTargets.Insert(index, normalizedTarget); }
+                else { NormalizedTargets[index] = normalizedTarget; }
             };
 
             targetListSource.ColumnChanging += (object sender, DataColumnChangeEventArgs e) => {
@@ -129,10 +135,10 @@ namespace laserControl
             };
 
             targetListSource.RowDeleting += (object sender, DataRowChangeEventArgs e) => {
-                normalizedTargets.RemoveAt(e.Row.Table.Rows.IndexOf(e.Row));
+                NormalizedTargets.RemoveAt(e.Row.Table.Rows.IndexOf(e.Row));
             };
 
-            targetListSource.TableCleared += (object sender, DataTableClearEventArgs e) => normalizedTargets.Clear();
+            targetListSource.TableCleared += (object sender, DataTableClearEventArgs e) => NormalizedTargets.Clear();
         }
 
         private void initializeDataGridView(DataGridView targetGridView)

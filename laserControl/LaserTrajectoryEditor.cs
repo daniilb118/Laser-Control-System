@@ -10,7 +10,7 @@ namespace laserControl
         public LaserTrajectoryEditor(LaserDevice device, DataGridView targetGridView, Panel screenPanel, Label label, NumericUpDown intensitySetter)
         {
             laserTrajectory = new(targetGridView, device.Profile.ScreenSize);
-            visualizationPanel = new(screenPanel, device, label);
+            visualizationPanel = new(screenPanel, device, label, laserTrajectory);
 
             screenPanel.MouseDown += (object? sender, MouseEventArgs e) =>
             {

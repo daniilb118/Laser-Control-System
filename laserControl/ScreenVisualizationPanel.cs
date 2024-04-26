@@ -16,6 +16,7 @@ namespace laserControl
         private Vector2 targetLaserPosition;
         private Cursor cursor;
         private Image? background = null;
+        private LaserTrajectory laserTrajectory;
 
         public Image? Background
         {
@@ -27,8 +28,9 @@ namespace laserControl
             }
         }
 
-        public ScreenVisualizationPanel(Panel laserControlPanel, LaserDevice laserDevice, Label label)
+        public ScreenVisualizationPanel(Panel laserControlPanel, LaserDevice laserDevice, Label label, LaserTrajectory laserTrajectory)
         {
+            this.laserTrajectory = laserTrajectory;
             coordinatesPanel = new(laserControlPanel);
             this.laserDevice = laserDevice;
             cursor = new(laserControlPanel);
@@ -68,8 +70,21 @@ namespace laserControl
             DrawLaserMark(graphics, coordinatesPanel.GetPanelPoint(laserPosition / laserDevice.Profile.ScreenSize), laserMarkSize, pen);
         }
 
+        private void visualizeTrajectory(Graphics graphics)
+        {
+            var targets = laserTrajectory.NormalizedTargets;
+            var f = (int i) => coordinatesPanel.GetPanelPoint(targets[i % targets.Count].Position);
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].Intensity == 0) continue;
+                graphics.DrawLine(new(Brushes.White, 3.0f), f(i), f(i + 1));
+                graphics.DrawLine(new(Brushes.Black), f(i), f(i + 1));
+            }
+        }
+
         private void drawDynamicLayers(Graphics graphics)
         {
+            visualizeTrajectory(graphics);
             visualizeLaserPosition(graphics, LaserPosition, new(Brushes.Blue));
             visualizeLaserPosition(graphics, TargetLaserPosition, new(Brushes.Red));
         }
