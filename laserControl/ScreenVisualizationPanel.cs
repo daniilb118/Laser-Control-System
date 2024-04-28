@@ -17,6 +17,7 @@ namespace laserControl
         private Cursor cursor;
         private Image? background = null;
         private LaserTrajectory laserTrajectory;
+        private Label label;
 
         public Image? Background
         {
@@ -30,20 +31,11 @@ namespace laserControl
 
         public ScreenVisualizationPanel(Panel laserControlPanel, LaserDevice laserDevice, Label label, LaserTrajectory laserTrajectory)
         {
+            this.label = label;
             this.laserTrajectory = laserTrajectory;
             coordinatesPanel = new(laserControlPanel);
             this.laserDevice = laserDevice;
             cursor = new(laserControlPanel);
-            
-            coordinatesPanel.backgroundPanel.MouseMove += new MouseEventHandler(
-                (object? sender, MouseEventArgs e) =>
-                {
-                    var pos = GetLaserPosition(e.Location);
-                    label.Text = $"({pos.X}m; {pos.Y}m)";
-                    label.Location = new(e.Location.X + 10, e.Location.Y + 1);
-                    cursor.Location = e.Location;
-                }
-            );
 
             laserControlPanel.MouseLeave += (object? sender, EventArgs e) => cursor.Hide();
             laserControlPanel.MouseEnter += (object? sender, EventArgs e) => cursor.Show();
@@ -106,6 +98,17 @@ namespace laserControl
             {
                 targetLaserPosition = value;
                 drawDynamicLayer(drawDynamicLayers);
+            }
+        }
+
+        public Vector2 CursorPosition
+        {
+            set
+            {
+                var location = coordinatesPanel.GetPanelPoint(value / laserDevice.Profile.ScreenSize);
+                label.Text = $"({value.X}m; {value.Y}m)";
+                label.Location = new(location.X + 10, location.Y + 1);
+                cursor.Location = location;
             }
         }
 

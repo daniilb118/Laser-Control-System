@@ -71,6 +71,12 @@ namespace laserControl
             SelectedIndex = SelectedIndex + 1;
         }
 
+        public int ClosestTargetIndex(Vector2 laserPosition)
+        {
+            var normalizedPosition = laserPosition / ScreenSize;
+            return Enumerable.Range(0, Length).MinBy(i => Vector2.Distance(NormalizedTargets[i].Position, normalizedPosition));
+        }
+
         private LaserDevice.Target targetFromDataRow(DataRow row)
         {
             return new(clampScaled((float)(row[0] ?? 0)), clampScaled((float)(row[1] ?? 0)), clampNormalized((float)(row[2] ?? 0)));

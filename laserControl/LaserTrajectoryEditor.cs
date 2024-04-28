@@ -14,18 +14,27 @@ namespace laserControl
 
             screenPanel.MouseDown += (object? sender, MouseEventArgs e) =>
             {
-                var targetPos = visualizationPanel.GetLaserPosition(e.Location);
+                var targetPos = AimedLaserPosition(visualizationPanel.GetLaserPosition(e.Location));
 
-                if (e.Button == MouseButtons.Left) laserTrajectory.SelectedTargetPosition = targetPos;
+                if (e.Button == MouseButtons.Left)
+                {
+                    if (Control.ModifierKeys.HasFlag(Keys.Alt)) laserTrajectory.SelectedIndex = laserTrajectory.ClosestTargetIndex(targetPos);
+                    else laserTrajectory.SelectedTargetPosition = targetPos;
+                }
                 else if (e.Button == MouseButtons.Right) laserTrajectory.InsertTargetAfterSelected(targetPos);
 
-                visualizationPanel.TargetLaserPosition = laserTrajectory.SelectedTarget.Position;
+                TargetLaserPosition = laserTrajectory.SelectedTarget.Position;
                 OnUserSelectedTargetChanged(new(targetPos, laserTrajectory.SelectedTarget.Intensity * (float)intensitySetter.Value / 100));
+            };
+
+            screenPanel.MouseMove += (object? sender, MouseEventArgs e) =>
+            {
+                visualizationPanel.CursorPosition = AimedLaserPosition(visualizationPanel.GetLaserPosition(e.Location));
             };
 
             targetGridView.SelectionChanged += (object? sender, EventArgs e) =>
             {
-                visualizationPanel.TargetLaserPosition = laserTrajectory.SelectedTarget.Position;
+                TargetLaserPosition = laserTrajectory.SelectedTarget.Position;
             };
         }
 
@@ -55,6 +64,16 @@ namespace laserControl
         {
             get => visualizationPanel.Background;
             set => visualizationPanel.Background = value;
+        }
+
+        private Vector2 AimedLaserPosition(Vector2 aimedLaserPosition)
+        {
+            var targetPosition = laserTrajectory.SelectedTarget.Position;
+            var useClosestPoint = Control.ModifierKeys.HasFlag(Keys.Alt);
+            var axisXFixed = Control.ModifierKeys.HasFlag(Keys.Control);
+            var axisYFixed = Control.ModifierKeys.HasFlag(Keys.Shift);
+            if (useClosestPoint) { return laserTrajectory[laserTrajectory.ClosestTargetIndex(aimedLaserPosition)].Position; }
+            return new(axisXFixed ? targetPosition.X : aimedLaserPosition.X, axisYFixed ? targetPosition.Y : aimedLaserPosition.Y);
         }
     }
 }
