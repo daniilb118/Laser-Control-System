@@ -1,3 +1,5 @@
+using CsvHelper;
+using System.Globalization;
 using System.IO.Ports;
 using System.Text.Json;
 
@@ -110,6 +112,32 @@ namespace laserControl
                 {
                     if (fileDialog.ShowDialog() != DialogResult.OK) return;
                     File.WriteAllText(fileDialog.FileName, JsonSerializer.Serialize(laserDevice.Profile));
+                });
+            };
+
+            importTrajectoryToolStripMenuItem.Click += (object? sender, EventArgs e) =>
+            {
+                OpenFileDialog fileDialog = new();
+                fileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+                if (fileDialog.ShowDialog() != DialogResult.OK) return;
+                MessageOnError(() =>
+                {
+                    using var reader = new StreamReader(fileDialog.FileName);
+                    using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+                    laserTrajectoryEditor.NormalizedTargets = new List<LaserDevice.Target>(csvReader.GetRecords<LaserDevice.Target>());
+                });
+            };
+
+            exportTrajectoryToolStripMenuItem.Click += (object? sender, EventArgs e) =>
+            {
+                SaveFileDialog fileDialog = new();
+                fileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+                MessageOnError(() =>
+                {
+                    if (fileDialog.ShowDialog() != DialogResult.OK) return;
+                    using var writer = new StreamWriter(fileDialog.FileName);
+                    using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+                    csvWriter.WriteRecords(laserTrajectoryEditor.NormalizedTargets);
                 });
             };
 

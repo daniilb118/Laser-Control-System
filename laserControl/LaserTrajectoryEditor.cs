@@ -48,6 +48,12 @@ namespace laserControl
             set => laserTrajectory.ScreenSize = value;
         }
 
+        public List<LaserDevice.Target> NormalizedTargets
+        {
+            get => laserTrajectory.NormalizedTargets;
+            set => laserTrajectory.NormalizedTargets = value;
+        }
+
         public Vector2 LaserPosition
         {
             get => visualizationPanel.LaserPosition;

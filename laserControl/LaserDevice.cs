@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using CsvHelper.Configuration.Attributes;
+using System.Numerics;
 
 namespace laserControl
 {
@@ -70,9 +71,14 @@ namespace laserControl
             public Target(Vector2 position, float intensity) :
                 this(position.X, position.Y, intensity)
             { }
+
+            [Name("x")]
             public float X { get; set; } = x;
+            [Name("y")]
             public float Y { get; set; } = y;
+            [Name("intensity")]
             public float Intensity { get; set; } = intensity;
+            [Ignore]
             public Vector2 Position
             {
                 get => new Vector2(X, Y);

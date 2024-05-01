@@ -50,6 +50,8 @@
             actionToolStripMenuItem = new ToolStripMenuItem();
             moveTo00ToolStripMenuItem = new ToolStripMenuItem();
             resetOriginToolStripMenuItem = new ToolStripMenuItem();
+            importTrajectoryToolStripMenuItem = new ToolStripMenuItem();
+            exportTrajectoryToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -187,7 +189,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importDeviceProfileToolStripMenuItem, exportDeviceProfileToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importDeviceProfileToolStripMenuItem, exportDeviceProfileToolStripMenuItem, importTrajectoryToolStripMenuItem, exportTrajectoryToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "File";
@@ -239,14 +241,26 @@
             // moveTo00ToolStripMenuItem
             // 
             moveTo00ToolStripMenuItem.Name = "moveTo00ToolStripMenuItem";
-            moveTo00ToolStripMenuItem.Size = new Size(147, 22);
+            moveTo00ToolStripMenuItem.Size = new Size(180, 22);
             moveTo00ToolStripMenuItem.Text = "Move to (0; 0)";
             // 
             // resetOriginToolStripMenuItem
             // 
             resetOriginToolStripMenuItem.Name = "resetOriginToolStripMenuItem";
-            resetOriginToolStripMenuItem.Size = new Size(147, 22);
+            resetOriginToolStripMenuItem.Size = new Size(180, 22);
             resetOriginToolStripMenuItem.Text = "Reset Origin";
+            // 
+            // importTrajectoryToolStripMenuItem
+            // 
+            importTrajectoryToolStripMenuItem.Name = "importTrajectoryToolStripMenuItem";
+            importTrajectoryToolStripMenuItem.Size = new Size(185, 22);
+            importTrajectoryToolStripMenuItem.Text = "Import Trajectory";
+            // 
+            // exportTrajectoryToolStripMenuItem
+            // 
+            exportTrajectoryToolStripMenuItem.Name = "exportTrajectoryToolStripMenuItem";
+            exportTrajectoryToolStripMenuItem.Size = new Size(185, 22);
+            exportTrajectoryToolStripMenuItem.Text = "Export Trajectory";
             // 
             // MainForm
             // 
@@ -298,5 +312,7 @@
         private Label label3;
         private NumericUpDown intensitySetter;
         private DataGridView targetGridView;
+        private ToolStripMenuItem importTrajectoryToolStripMenuItem;
+        private ToolStripMenuItem exportTrajectoryToolStripMenuItem;
     }
 }
