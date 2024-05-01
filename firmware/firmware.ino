@@ -22,6 +22,7 @@ StepperT stepper0(5, 3, 4, 2);
 StepperT stepper1(9, 7, 8, 6);
 
 uint8_t lastIntensity = 0;
+bool isStopping = false;
 
 void initializePlanner(Planner& planner) {
 	planner.addStepper(0, stepper0);
@@ -42,6 +43,25 @@ void onTarget() {
 	ioPort.send(message);
 }
 
+void stopToClearBuffer() {
+	bool stopped = planner.getStatus() < 2;
+	if (stopped) {
+		clearBufferOnStop();
+	} else {
+		isStopping = true;
+		planner.stop();
+	}
+}
+
+void clearBufferOnStop() {
+	planner.brake();
+	planner.clearBuffer();
+	intensities.clear();
+	int32_t currentPos[] = {planner.getCurrent(0), planner.getCurrent(1)};
+	planner.addTarget(currentPos, 0);
+	planner.start();
+}
+
 void processMessage(LaserDeviceMessage message) {
 	auto& data = message.data;
 	switch (message.type) {
@@ -59,7 +79,7 @@ void processMessage(LaserDeviceMessage message) {
 		intensities.add(data.targetData.intensity);
 		break;
 	case MessageType::ClearBuffer:
-		planner.clearBuffer();
+		stopToClearBuffer();
 		break;
 	case MessageType::Echo:
 		message.type = MessageType::Echo;
@@ -78,6 +98,13 @@ void setup() {
 }
 
 void loop() {
-	ioPort.tick();
+	bool isStopped = planner.getStatus() < 2;
+	if (isStopping && isStopped) {
+		isStopping = false;
+		clearBufferOnStop();
+	}
+	if (!isStopping) {
+		ioPort.tick();
+	}
 	planner.tick();
 }
