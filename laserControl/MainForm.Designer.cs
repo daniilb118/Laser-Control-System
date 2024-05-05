@@ -52,6 +52,8 @@
             resetOriginToolStripMenuItem = new ToolStripMenuItem();
             importTrajectoryToolStripMenuItem = new ToolStripMenuItem();
             exportTrajectoryToolStripMenuItem = new ToolStripMenuItem();
+            label4 = new Label();
+            programModeSetter = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -99,6 +101,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(programModeSetter);
+            splitContainer1.Panel1.Controls.Add(label4);
             splitContainer1.Panel1.Controls.Add(targetGridView);
             splitContainer1.Panel1.Controls.Add(label3);
             splitContainer1.Panel1.Controls.Add(intensitySetter);
@@ -120,15 +124,15 @@
             targetGridView.AllowUserToAddRows = false;
             targetGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             targetGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            targetGridView.Location = new Point(3, 123);
+            targetGridView.Location = new Point(3, 152);
             targetGridView.Name = "targetGridView";
-            targetGridView.Size = new Size(188, 237);
+            targetGridView.Size = new Size(188, 208);
             targetGridView.TabIndex = 7;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(3, 96);
+            label3.Location = new Point(3, 125);
             label3.Name = "label3";
             label3.Size = new Size(65, 15);
             label3.TabIndex = 6;
@@ -137,7 +141,7 @@
             // intensitySetter
             // 
             intensitySetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            intensitySetter.Location = new Point(74, 94);
+            intensitySetter.Location = new Point(74, 123);
             intensitySetter.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             intensitySetter.Name = "intensitySetter";
             intensitySetter.Size = new Size(117, 23);
@@ -146,7 +150,7 @@
             // speedSetter
             // 
             speedSetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            speedSetter.Location = new Point(74, 65);
+            speedSetter.Location = new Point(74, 94);
             speedSetter.Name = "speedSetter";
             speedSetter.Size = new Size(117, 23);
             speedSetter.TabIndex = 4;
@@ -154,7 +158,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(3, 67);
+            label2.Location = new Point(3, 96);
             label2.Name = "label2";
             label2.Size = new Size(39, 15);
             label2.TabIndex = 3;
@@ -206,6 +210,18 @@
             exportDeviceProfileToolStripMenuItem.Size = new Size(185, 22);
             exportDeviceProfileToolStripMenuItem.Text = "Export Device Profile";
             // 
+            // importTrajectoryToolStripMenuItem
+            // 
+            importTrajectoryToolStripMenuItem.Name = "importTrajectoryToolStripMenuItem";
+            importTrajectoryToolStripMenuItem.Size = new Size(185, 22);
+            importTrajectoryToolStripMenuItem.Text = "Import Trajectory";
+            // 
+            // exportTrajectoryToolStripMenuItem
+            // 
+            exportTrajectoryToolStripMenuItem.Name = "exportTrajectoryToolStripMenuItem";
+            exportTrajectoryToolStripMenuItem.Size = new Size(185, 22);
+            exportTrajectoryToolStripMenuItem.Text = "Export Trajectory";
+            // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { chooseBackgroundToolStripMenuItem, clearBackgroundToolStripMenuItem, configureDeviceToolStripMenuItem });
@@ -250,17 +266,23 @@
             resetOriginToolStripMenuItem.Size = new Size(180, 22);
             resetOriginToolStripMenuItem.Text = "Reset Origin";
             // 
-            // importTrajectoryToolStripMenuItem
+            // label4
             // 
-            importTrajectoryToolStripMenuItem.Name = "importTrajectoryToolStripMenuItem";
-            importTrajectoryToolStripMenuItem.Size = new Size(185, 22);
-            importTrajectoryToolStripMenuItem.Text = "Import Trajectory";
+            label4.AutoSize = true;
+            label4.Location = new Point(0, 68);
+            label4.Name = "label4";
+            label4.Size = new Size(38, 15);
+            label4.TabIndex = 8;
+            label4.Text = "Mode";
             // 
-            // exportTrajectoryToolStripMenuItem
+            // programModeSetter
             // 
-            exportTrajectoryToolStripMenuItem.Name = "exportTrajectoryToolStripMenuItem";
-            exportTrajectoryToolStripMenuItem.Size = new Size(185, 22);
-            exportTrajectoryToolStripMenuItem.Text = "Export Trajectory";
+            programModeSetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            programModeSetter.FormattingEnabled = true;
+            programModeSetter.Location = new Point(74, 65);
+            programModeSetter.Name = "programModeSetter";
+            programModeSetter.Size = new Size(117, 23);
+            programModeSetter.TabIndex = 9;
             // 
             // MainForm
             // 
@@ -314,5 +336,7 @@
         private DataGridView targetGridView;
         private ToolStripMenuItem importTrajectoryToolStripMenuItem;
         private ToolStripMenuItem exportTrajectoryToolStripMenuItem;
+        private ComboBox programModeSetter;
+        private Label label4;
     }
 }

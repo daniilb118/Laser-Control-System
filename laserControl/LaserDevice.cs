@@ -6,6 +6,37 @@ namespace laserControl
     public class LaserDevice
     {
         private IOPort ioPort;
+        private IEnumerator<Target>? trajectory;
+
+        /// <summary>
+        /// device starts retracing setted trajectory after call
+        /// </summary>
+        public IEnumerator<Target>? Trajectory
+        {
+            get => trajectory;
+            set
+            {
+                ClearBuffer();
+                trajectory = value;
+                loadTargetsToDeviceBuffer();
+            }
+        }
+
+        private bool moveNext() => Trajectory?.MoveNext() == true;
+
+        /// <summary>
+        /// transfers buffered trajectory until device buffer available or until trajectory completely transfered
+        /// </summary>
+        private void loadTargetsToDeviceBuffer()
+        {
+            var nextAvailable = moveNext();
+            while (nextAvailable & bufferAvailable > 16)
+            {
+                AddTarget(Trajectory.Current); //Trajectory is not null here
+                nextAvailable = moveNext();
+            }
+            if (!nextAvailable) trajectory = null;
+        }
 
         public LaserDevice(IOPort ioPort)
         {
@@ -14,6 +45,8 @@ namespace laserControl
             {
                 if (message[5] == (byte)LaserDeviceMessageType.TargetReached)
                 {
+                    bufferedTrajectoryLength = Math.Max(0, bufferedTrajectoryLength - 1);
+                    loadTargetsToDeviceBuffer();
                     OnTargetReach();
                 }
             };
@@ -30,8 +63,19 @@ namespace laserControl
             ioPort.Send(LaserDeviceMessage.SetBacklashY(Profile.AxisYBacklash));
         }
 
-        public void AddTarget(Target target)
+        /// <summary>
+        /// clears buffered trajectory and sends trajectory with the single target
+        /// discards remained trajectory that was set via LaserDevice.Trajectory
+        /// </summary>
+        public void SetTarget(Target target)
         {
+            ClearBuffer();
+            AddTarget(target);
+        }
+
+        private void AddTarget(Target target)
+        {
+            bufferedTrajectoryLength = Math.Max(0, bufferedTrajectoryLength + 1);
             var motorsTarget = Profile.DiscreteMotorsPosition(target.Position);
             ioPort.Send(LaserDeviceMessage.AddTarget(motorsTarget, (byte)(target.Intensity * 255)));
         }
@@ -52,12 +96,16 @@ namespace laserControl
 
         public void ClearBuffer()
         {
+            trajectory = null;
+            bufferedTrajectoryLength = 0;
             ioPort.Send(LaserDeviceMessage.ClearBuffer());
         }
 
         private int trajectoryBufferLength => 32;
 
         private int bufferedTrajectoryLength = 0;
+
+        private int bufferAvailable => trajectoryBufferLength - bufferedTrajectoryLength;
 
         public delegate void OnTargetReachDelegate();
 

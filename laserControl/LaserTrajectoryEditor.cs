@@ -6,9 +6,12 @@ namespace laserControl
     {
         private LaserTrajectory laserTrajectory;
         private ScreenVisualizationPanel visualizationPanel;
+        private NumericUpDown intensitySetter;
 
         public LaserTrajectoryEditor(LaserDevice device, DataGridView targetGridView, Panel screenPanel, Label label, NumericUpDown intensitySetter)
         {
+            this.intensitySetter = intensitySetter;
+
             laserTrajectory = new(targetGridView, device.Profile.ScreenSize);
             visualizationPanel = new(screenPanel, device, label, laserTrajectory);
 
@@ -24,7 +27,7 @@ namespace laserControl
                 else if (e.Button == MouseButtons.Right) laserTrajectory.InsertTargetAfterSelected(targetPos);
 
                 TargetLaserPosition = laserTrajectory.SelectedTarget.Position;
-                OnUserSelectedTargetChanged(new(targetPos, laserTrajectory.SelectedTarget.Intensity * (float)intensitySetter.Value / 100));
+                OnUserSelectedTargetChanged(new(targetPos, laserTrajectory.SelectedTarget.Intensity * intensityMultiplier));
             };
 
             screenPanel.MouseMove += (object? sender, MouseEventArgs e) =>
@@ -36,11 +39,20 @@ namespace laserControl
             {
                 TargetLaserPosition = laserTrajectory.SelectedTarget.Position;
             };
+
+            targetGridView.CellMouseDown += (object? sender, DataGridViewCellMouseEventArgs e) =>
+            {
+                if (e.RowIndex < 0) return;
+                var target = laserTrajectory[e.RowIndex];
+                OnUserSelectedTargetChanged(new(target.Position, target.Intensity * intensityMultiplier));
+            };
         }
 
         public delegate void OnUserSelectedTargetChangedDelegate(LaserDevice.Target target);
 
         public OnUserSelectedTargetChangedDelegate OnUserSelectedTargetChanged = delegate { };
+
+        public int TrajectoryLength => laserTrajectory.Length;
 
         public float ScreenSize
         {
@@ -48,11 +60,19 @@ namespace laserControl
             set => laserTrajectory.ScreenSize = value;
         }
 
+        public int SelectedIndex
+        {
+            get => laserTrajectory.SelectedIndex;
+            set => laserTrajectory.SelectedIndex = value;
+        }
+
         public List<LaserDevice.Target> NormalizedTargets
         {
             get => laserTrajectory.NormalizedTargets;
             set => laserTrajectory.NormalizedTargets = value;
         }
+
+        public IEnumerable<LaserDevice.Target> GetTargets(int begin, int? end) => laserTrajectory.GetTargets(begin, end);
 
         public Vector2 LaserPosition
         {
@@ -71,6 +91,8 @@ namespace laserControl
             get => visualizationPanel.Background;
             set => visualizationPanel.Background = value;
         }
+
+        private float intensityMultiplier => (float)intensitySetter.Value / 100;
 
         private Vector2 AimedLaserPosition(Vector2 aimedLaserPosition)
         {

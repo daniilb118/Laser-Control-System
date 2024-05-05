@@ -1,4 +1,5 @@
 using CsvHelper;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO.Ports;
 using System.Text.Json;
@@ -11,27 +12,45 @@ namespace laserControl
         private LaserDevice laserDevice;
         private LaserTrajectoryEditor laserTrajectoryEditor;
 
+        private enum Mode
+        {
+            Stop = 0,
+            Manual = 1,
+            Auto = 2,
+            Repeat = 3,
+        }
+
         private void MessageOnError(Action method)
         {
             try { method(); }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
+        private Mode programMode
+        {
+            get => (Mode)programModeSetter.SelectedIndex;
+            set
+            {
+                programModeSetter.SelectedIndex = (int)value;
+            }
+        }
+
         public MainForm()
         {
             serialPort = new SerialPort();
 
-            laserDevice = new LaserDevice(new IOPort(serialPort, LaserDeviceMessage.Size));
+            IOPort port = new(serialPort, LaserDeviceMessage.Size);
+
+            laserDevice = new LaserDevice(port);
 
             InitializeComponent();
 
             laserTrajectoryEditor = new(laserDevice, targetGridView, screenVisualizationPanel, cursorLabel, intensitySetter);
 
-            laserDevice.OnTargetReach = () =>
-            {
-                laserTrajectoryEditor.LaserPosition = laserTrajectoryEditor.TargetLaserPosition;
-            };
+            updateMenu(serialPort.IsOpen);
 
+            initializeProtocolDebugger(port);
+            initializeLaserControlPanel();
             initializeControls();
             initializeStripMenu();
         }
@@ -42,12 +61,82 @@ namespace laserControl
             if (serialPort.IsOpen) { laserDevice.SendProfile(); }
         }
 
+        private void updateMenu(bool isOpen)
+        {
+            connectionButton.Text = isOpen ? "Disconnect" : "Connect";
+            programModeSetter.Enabled = isOpen;
+        }
+
+        [ConditionalAttribute("DEBUG")]
+        private void initializeProtocolDebugger(IOPort port)
+        {
+            var testButton = new Button();
+            screenVisualizationPanel.Controls.Add(testButton);
+            testButton.Click += (object? o, EventArgs e) =>
+            {
+                var label = new Label();
+                label.Size = new(1000, 1000);
+                label.Click += (object? o, EventArgs e) => label.Text = "Debug:\n";
+                port.OnFrame = (Frame frame, string who) =>
+                {
+                    label.Text += frame.isAuxiliary == 1
+                        ? $"{Convert.ToHexString(frame.message[0..5])} {frame.thisACK} {frame.thatACK} {who}\n"
+                        : $"{Convert.ToHexString(frame.message[0..5])} {frame.isAuxiliary} {frame.thisACK} {frame.thatACK} {(LaserDeviceMessageType)frame.message[5]} {who}\n";
+                };
+                var form = new Form();
+                form.Controls.Add(label);
+                form.Show();
+            };
+        }
+
+        private void initializeLaserControlPanel()
+        {
+            programModeSetter.Items.AddRange(["Stop", "Manual", "Auto", "Repeat"]);
+
+            programMode = Mode.Stop;
+
+            programModeSetter.SelectedIndexChanged += (object? sender, EventArgs e) =>
+            {
+                if (programMode == Mode.Stop)
+                {
+                    laserDevice.SetTarget(new(0, 0, 0));
+                }
+                else if (programMode == Mode.Auto | programMode == Mode.Repeat)
+                {
+                    laserDevice.Trajectory = laserTrajectoryEditor.GetTargets(laserTrajectoryEditor.SelectedIndex, programMode == Mode.Auto ? laserTrajectoryEditor.TrajectoryLength : null).GetEnumerator();
+                }
+            };
+
+            laserDevice.OnTargetReach = () =>
+            {
+                laserTrajectoryEditor.LaserPosition = laserTrajectoryEditor.TargetLaserPosition;
+                if (programMode == Mode.Auto)
+                {
+                    if (laserTrajectoryEditor.SelectedIndex < laserTrajectoryEditor.TrajectoryLength - 1)
+                    {
+                        laserTrajectoryEditor.SelectedIndex = laserTrajectoryEditor.SelectedIndex + 1;
+                    }
+                    else
+                    {
+                        programMode = Mode.Manual;
+                    }
+                }
+                else if (programMode == Mode.Repeat)
+                {
+                    laserTrajectoryEditor.SelectedIndex = (laserTrajectoryEditor.SelectedIndex + 1) % laserTrajectoryEditor.TrajectoryLength;
+                }
+            };
+        }
+
         private void initializeControls()
         {
+            splitContainer1.FixedPanel = FixedPanel.Panel1;
+
             laserTrajectoryEditor.OnUserSelectedTargetChanged += (LaserDevice.Target target) =>
             {
-                if (!serialPort.IsOpen) return;
-                laserDevice.AddTarget(target);
+                if (programMode == Mode.Auto | programMode == Mode.Repeat) { programMode = Mode.Manual; }
+                if (programMode != Mode.Manual) return;
+                laserDevice.SetTarget(target);
             };
 
             connectionButton.Click += (object? sender, EventArgs e) =>
@@ -56,15 +145,28 @@ namespace laserControl
                 {
                     if (serialPort.IsOpen)
                     {
-                        serialPort.Close();
-                        connectionButton.Text = "Connect";
+                        if (programMode == Mode.Stop)
+                        {
+                            serialPort.Close();
+                        }
+                        else
+                        {
+                            programMode = Mode.Stop;
+                        }
                     }
                     else
                     {
                         serialPort.Open();
-                        connectionButton.Text = "Disconnect";
                     }
                 });
+
+                if (serialPort.IsOpen)
+                {
+                    laserDevice.SendProfile();
+                    laserDevice.Speed = (uint)speedSetter.Value;
+                }
+
+                updateMenu(serialPort.IsOpen);
             };
 
             serialPortSelector.DropDown += (object? sender, EventArgs e) =>
@@ -101,6 +203,7 @@ namespace laserControl
                     var profile = JsonSerializer.Deserialize<LaserDeviceProfile>(File.ReadAllText(fileDialog.FileName));
                     if (profile == null) throw new Exception("Couldn't read device profile.");
                     laserDevice.Profile = profile;
+                    onProfileUpdate();
                 });
             };
 
@@ -159,7 +262,7 @@ namespace laserControl
 
             moveTo00ToolStripMenuItem.Click += (object? sender, EventArgs e) =>
             {
-                laserDevice.AddTarget(new(0, 0, 0));
+                laserDevice.SetTarget(new(0, 0, 0));
             };
         }
     }

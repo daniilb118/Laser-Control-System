@@ -172,5 +172,16 @@ namespace laserControl
                 targetListSource.Rows[e.RowIndex][2] = (float)(0 == this[e.RowIndex].Intensity ? 1 : 0);
             };
         }
+
+        public IEnumerable<LaserDevice.Target> GetTargets(int begin, int? end)
+        {
+            int index = begin;
+            while (index < (end ?? Length))
+            {
+                int oldIndex = index;
+                index = (end == null) ? (index + 1) % Length : index + 1;
+                yield return this[oldIndex];
+            }
+        }
     }
 }
