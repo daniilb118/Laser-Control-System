@@ -488,11 +488,13 @@ class GPlanner2 {
         tmr = micros();
         for (uint8_t i = 0; i < _AXLES; i++) {                        // для всех осей
             dS[i] = abs(bufP[i].get(1) - steppers[i]->pos);           // модуль ошибки по оси
-            int8_t dir = steppers[i]->pos < bufP[i].get(1) ? 1 : -1;  // направление движения по оси
-            if (blash[i] && steppers[i]->dir != dir) {                // разворот! Учитываем люфт
-                blash_buf[i] = blash[i];
+            if (dS[i] > 0) {                                              // если целевая точка не отличается от текущей - разворота нет
+                int8_t dir = steppers[i]->pos < bufP[i].get(1) ? 1 : -1;  // направление движения по оси
+                if (blash[i] && steppers[i]->dir != dir) {                // разворот! Учитываем люфт
+                    blash_buf[i] = blash[i];
+                }
+                steppers[i]->dir = dir;
             }
-            steppers[i]->dir = dir;
         }
 
         if (a == 0) S = calcS(0);
