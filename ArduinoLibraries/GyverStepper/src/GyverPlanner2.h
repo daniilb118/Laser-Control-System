@@ -121,6 +121,7 @@ class GPlanner2 {
         if (!status) {
             V = nV;
             usMin = 1000000.0 / V;
+            usMin2 = 1000.0 / V;
             setAcceleration(na);
             changeSett = 0;
         } else changeSett = 1;
@@ -243,7 +244,8 @@ class GPlanner2 {
     bool tick() {
         checkBuffer();
         uint32_t now = micros();
-        if (status > 1 && now - tmr >= us) {
+        uint32_t ll = (gSkip) ? max(us, usMin) : us;
+        if (status > 1 && now - tmr >= ll) {
             tmr = now;  //+= us;//= micros();
             tickManual();
         }
@@ -267,6 +269,7 @@ class GPlanner2 {
                 if (!skip) skip = 1;
             }
         }
+        gSkip = skip;
         if (skip) return 1;
 
         // здесь step - шаг вдоль общей линии траектории длиной S
@@ -583,10 +586,11 @@ class GPlanner2 {
 
     uint16_t blash[_AXLES] = {}, blash_buf[_AXLES] = {};
 
+    bool gSkip = false;
     uint32_t us;
     int32_t nd[_AXLES], dS[_AXLES];
     int32_t step, substep, S, s1, s2, so1, so2;
-    uint32_t tmr, us0, usMin, us10;
+    uint32_t tmr, us0, usMin, us10, usMin2;
     uint16_t a, na;
     int16_t stopStep;
     float V, nV;
