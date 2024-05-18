@@ -45,7 +45,7 @@ namespace laserControl
 
             InitializeComponent();
 
-            laserTrajectoryEditor = new(laserDevice, targetGridView, screenVisualizationPanel, cursorLabel, intensitySetter);
+            laserTrajectoryEditor = new(laserDevice, targetGridView, screenVisualizationPanel, laserPositionLabel, intensitySetter);
 
             updateMenu(serialPort.IsOpen);
 

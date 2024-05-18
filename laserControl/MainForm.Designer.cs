@@ -32,17 +32,23 @@
             serialPortSelector = new ComboBox();
             label1 = new Label();
             splitContainer1 = new SplitContainer();
+            programModeSetter = new ComboBox();
+            label4 = new Label();
             targetGridView = new DataGridView();
             label3 = new Label();
             intensitySetter = new NumericUpDown();
             speedSetter = new NumericUpDown();
             label2 = new Label();
+            statusStrip1 = new StatusStrip();
+            laserPositionLabel = new ToolStripStatusLabel();
             screenVisualizationPanel = new Panel();
             cursorLabel = new Label();
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             importDeviceProfileToolStripMenuItem = new ToolStripMenuItem();
             exportDeviceProfileToolStripMenuItem = new ToolStripMenuItem();
+            importTrajectoryToolStripMenuItem = new ToolStripMenuItem();
+            exportTrajectoryToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             chooseBackgroundToolStripMenuItem = new ToolStripMenuItem();
             clearBackgroundToolStripMenuItem = new ToolStripMenuItem();
@@ -50,10 +56,6 @@
             actionToolStripMenuItem = new ToolStripMenuItem();
             moveTo00ToolStripMenuItem = new ToolStripMenuItem();
             resetOriginToolStripMenuItem = new ToolStripMenuItem();
-            importTrajectoryToolStripMenuItem = new ToolStripMenuItem();
-            exportTrajectoryToolStripMenuItem = new ToolStripMenuItem();
-            label4 = new Label();
-            programModeSetter = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -61,7 +63,7 @@
             ((System.ComponentModel.ISupportInitialize)targetGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)intensitySetter).BeginInit();
             ((System.ComponentModel.ISupportInitialize)speedSetter).BeginInit();
-            screenVisualizationPanel.SuspendLayout();
+            statusStrip1.SuspendLayout();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -114,10 +116,29 @@
             // 
             // splitContainer1.Panel2
             // 
+            splitContainer1.Panel2.Controls.Add(statusStrip1);
             splitContainer1.Panel2.Controls.Add(screenVisualizationPanel);
             splitContainer1.Size = new Size(551, 363);
             splitContainer1.SplitterDistance = 194;
             splitContainer1.TabIndex = 3;
+            // 
+            // programModeSetter
+            // 
+            programModeSetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            programModeSetter.FormattingEnabled = true;
+            programModeSetter.Location = new Point(74, 65);
+            programModeSetter.Name = "programModeSetter";
+            programModeSetter.Size = new Size(117, 23);
+            programModeSetter.TabIndex = 9;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(3, 68);
+            label4.Name = "label4";
+            label4.Size = new Size(38, 15);
+            label4.TabIndex = 8;
+            label4.Text = "Mode";
             // 
             // targetGridView
             // 
@@ -164,13 +185,27 @@
             label2.TabIndex = 3;
             label2.Text = "Speed";
             // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new ToolStripItem[] { laserPositionLabel });
+            statusStrip1.Location = new Point(0, 341);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(353, 22);
+            statusStrip1.TabIndex = 3;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            laserPositionLabel.Name = "toolStripStatusLabel1";
+            laserPositionLabel.Size = new Size(102, 17);
+            laserPositionLabel.Text = "laserPositionLabel";
+            // 
             // screenVisualizationPanel
             // 
             screenVisualizationPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            screenVisualizationPanel.Controls.Add(cursorLabel);
             screenVisualizationPanel.Location = new Point(3, 3);
             screenVisualizationPanel.Name = "screenVisualizationPanel";
-            screenVisualizationPanel.Size = new Size(347, 357);
+            screenVisualizationPanel.Size = new Size(347, 335);
             screenVisualizationPanel.TabIndex = 2;
             // 
             // cursorLabel
@@ -257,32 +292,14 @@
             // moveTo00ToolStripMenuItem
             // 
             moveTo00ToolStripMenuItem.Name = "moveTo00ToolStripMenuItem";
-            moveTo00ToolStripMenuItem.Size = new Size(180, 22);
+            moveTo00ToolStripMenuItem.Size = new Size(147, 22);
             moveTo00ToolStripMenuItem.Text = "Move to (0; 0)";
             // 
             // resetOriginToolStripMenuItem
             // 
             resetOriginToolStripMenuItem.Name = "resetOriginToolStripMenuItem";
-            resetOriginToolStripMenuItem.Size = new Size(180, 22);
+            resetOriginToolStripMenuItem.Size = new Size(147, 22);
             resetOriginToolStripMenuItem.Text = "Reset Origin";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(0, 68);
-            label4.Name = "label4";
-            label4.Size = new Size(38, 15);
-            label4.TabIndex = 8;
-            label4.Text = "Mode";
-            // 
-            // programModeSetter
-            // 
-            programModeSetter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            programModeSetter.FormattingEnabled = true;
-            programModeSetter.Location = new Point(74, 65);
-            programModeSetter.Name = "programModeSetter";
-            programModeSetter.Size = new Size(117, 23);
-            programModeSetter.TabIndex = 9;
             // 
             // MainForm
             // 
@@ -297,13 +314,14 @@
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
+            splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)targetGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)intensitySetter).EndInit();
             ((System.ComponentModel.ISupportInitialize)speedSetter).EndInit();
-            screenVisualizationPanel.ResumeLayout(false);
-            screenVisualizationPanel.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             ResumeLayout(false);
@@ -338,5 +356,7 @@
         private ToolStripMenuItem exportTrajectoryToolStripMenuItem;
         private ComboBox programModeSetter;
         private Label label4;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel laserPositionLabel;
     }
 }

@@ -8,12 +8,12 @@ namespace laserControl
         private ScreenVisualizationPanel visualizationPanel;
         private NumericUpDown intensitySetter;
 
-        public LaserTrajectoryEditor(LaserDevice device, DataGridView targetGridView, Panel screenPanel, Label label, NumericUpDown intensitySetter)
+        public LaserTrajectoryEditor(LaserDevice device, DataGridView targetGridView, Panel screenPanel, ToolStripLabel laserPositionLabel, NumericUpDown intensitySetter)
         {
             this.intensitySetter = intensitySetter;
 
             laserTrajectory = new(targetGridView, device.Profile.ScreenSize);
-            visualizationPanel = new(screenPanel, device, label, laserTrajectory);
+            visualizationPanel = new(screenPanel, device, laserTrajectory);
 
             screenPanel.MouseDown += (object? sender, MouseEventArgs e) =>
             {
@@ -33,7 +33,12 @@ namespace laserControl
             screenPanel.MouseMove += (object? sender, MouseEventArgs e) =>
             {
                 visualizationPanel.CursorPosition = AimedLaserPosition(visualizationPanel.GetLaserPosition(e.Location));
+                var targetPosition = AimedLaserPosition(visualizationPanel.GetLaserPosition(e.Location));
+                visualizationPanel.CursorPosition = targetPosition;
+                laserPositionLabel.Text = $"Position: ({targetPosition.X}m; {targetPosition.Y}m)";
             };
+
+            screenPanel.MouseLeave += (object? sender, EventArgs e) => laserPositionLabel.Text = "";
 
             targetGridView.SelectionChanged += (object? sender, EventArgs e) =>
             {
