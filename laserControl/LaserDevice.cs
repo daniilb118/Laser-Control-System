@@ -1,5 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using System.Numerics;
+using static laserControl.LaserDevice;
 
 namespace laserControl
 {
@@ -32,7 +33,8 @@ namespace laserControl
             var nextAvailable = moveNext();
             while (nextAvailable & bufferAvailable > 16)
             {
-                AddTarget(Trajectory.Current); //Trajectory is not null here
+                if (Trajectory == null) return; //unreachable
+                AddTarget(Trajectory.Current);
                 nextAvailable = moveNext();
             }
             if (!nextAvailable) trajectory = null;
@@ -73,11 +75,15 @@ namespace laserControl
             AddTarget(target);
         }
 
+        private Int16[] compensatedMotorDiscretePosition(Vector2 laserPosition)
+        {
+            return Profile.DiscreteMotorsPosition(Profile.Compensate(laserPosition / Profile.ScreenSize) * Profile.ScreenSize);
+        }
+
         private void AddTarget(Target target)
         {
             bufferedTrajectoryLength = Math.Max(0, bufferedTrajectoryLength + 1);
-            var motorsTarget = Profile.DiscreteMotorsPosition(target.Position);
-            ioPort.Send(LaserDeviceMessage.AddTarget(motorsTarget, (byte)(target.Intensity * 255)));
+            ioPort.Send(LaserDeviceMessage.AddTarget(compensatedMotorDiscretePosition(target.Position), (byte)(target.Intensity * 255)));
         }
 
         public UInt32 Speed
