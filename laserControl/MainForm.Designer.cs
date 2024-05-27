@@ -194,11 +194,10 @@
             statusStrip1.TabIndex = 3;
             statusStrip1.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // laserPositionLabel
             // 
-            laserPositionLabel.Name = "toolStripStatusLabel1";
-            laserPositionLabel.Size = new Size(102, 17);
-            laserPositionLabel.Text = "laserPositionLabel";
+            laserPositionLabel.Name = "laserPositionLabel";
+            laserPositionLabel.Size = new Size(0, 17);
             // 
             // screenVisualizationPanel
             // 

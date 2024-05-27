@@ -254,9 +254,14 @@ namespace laserControl
 
             clearBackgroundToolStripMenuItem.Click += (object? sender, EventArgs e) => laserTrajectoryEditor.Background = null;
 
-            configureDeviceToolStripMenuItem.Click += (object? sender, EventArgs e) => {
+            configureDeviceToolStripMenuItem.Click += (object? sender, EventArgs e) =>
+            {
                 DeviceConfigurationForm form = new(laserDevice.Profile);
-                form.OnApply += onProfileUpdate;
+                form.OnApply += (LaserDeviceProfile profile) =>
+                {
+                    laserDevice.Profile = profile;
+                    onProfileUpdate();
+                };
                 form.Show();
             };
 
