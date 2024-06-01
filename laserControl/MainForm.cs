@@ -2,6 +2,7 @@ using CsvHelper;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO.Ports;
+using System.Numerics;
 using System.Text.Json;
 
 namespace laserControl
@@ -124,6 +125,15 @@ namespace laserControl
                 else if (programMode == Mode.Repeat)
                 {
                     laserTrajectoryEditor.SelectedIndex = (laserTrajectoryEditor.SelectedIndex + 1) % laserTrajectoryEditor.TrajectoryLength;
+                }
+            };
+
+            laserTrajectoryEditor.MouseDown += (object? sender, MouseEventArgs e, Vector2 targetPosition) => {
+                if (e.Button == MouseButtons.Middle)
+                {
+                    if (!serialPort.IsOpen) return;
+                    laserDevice.Position = targetPosition;
+                    return;
                 }
             };
         }

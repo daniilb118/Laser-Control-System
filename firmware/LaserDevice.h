@@ -77,6 +77,10 @@ public:
 		stopToClearBuffer();
 	}
 
+	void declarePosition(int16_t position[]) {
+		planner.setCurrent(position);
+	}
+
 	void tick() {
 		bool isStopped = planner.getStatus() < 2;
 		if (isStopping && isStopped) {

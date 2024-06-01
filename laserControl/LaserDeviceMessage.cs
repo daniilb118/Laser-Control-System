@@ -5,7 +5,7 @@
         SetSpeed = 0,
         SetBacklashX = 1,
         SetBacklashY = 2,
-        ResetOrigin = 3,
+        DeclarePosition = 3,
         AddTarget = 4,
         ClearBuffer = 5,
         Echo = 6,
@@ -13,6 +13,9 @@
         DebugInfo = 8,
     }
 
+    /// <summary>
+    /// Generates binary representations of device communtication protocol data units.
+    /// </summary>
     internal class LaserDeviceMessage
     {
         public static int Size => 6;
@@ -28,9 +31,9 @@
         {
             return BuildCommand(LaserDeviceMessageType.SetBacklashY, BitConverter.GetBytes(offset));
         }
-        public static byte[] ResetOrigin()
+        public static byte[] DeclarePosition(Int16[] position)
         {
-            return BuildCommand(LaserDeviceMessageType.ResetOrigin, []);
+            return BuildCommand(LaserDeviceMessageType.DeclarePosition, GetTargetBytes(position));
         }
         public static byte[] AddTarget(Int16[] target, byte intencity)
         {

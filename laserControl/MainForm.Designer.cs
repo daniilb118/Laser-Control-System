@@ -55,7 +55,6 @@
             configureDeviceToolStripMenuItem = new ToolStripMenuItem();
             actionToolStripMenuItem = new ToolStripMenuItem();
             moveTo00ToolStripMenuItem = new ToolStripMenuItem();
-            resetOriginToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -283,7 +282,7 @@
             // 
             // actionToolStripMenuItem
             // 
-            actionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { moveTo00ToolStripMenuItem, resetOriginToolStripMenuItem });
+            actionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { moveTo00ToolStripMenuItem });
             actionToolStripMenuItem.Name = "actionToolStripMenuItem";
             actionToolStripMenuItem.Size = new Size(54, 20);
             actionToolStripMenuItem.Text = "Action";
@@ -291,14 +290,8 @@
             // moveTo00ToolStripMenuItem
             // 
             moveTo00ToolStripMenuItem.Name = "moveTo00ToolStripMenuItem";
-            moveTo00ToolStripMenuItem.Size = new Size(147, 22);
+            moveTo00ToolStripMenuItem.Size = new Size(180, 22);
             moveTo00ToolStripMenuItem.Text = "Move to (0; 0)";
-            // 
-            // resetOriginToolStripMenuItem
-            // 
-            resetOriginToolStripMenuItem.Name = "resetOriginToolStripMenuItem";
-            resetOriginToolStripMenuItem.Size = new Size(147, 22);
-            resetOriginToolStripMenuItem.Text = "Reset Origin";
             // 
             // MainForm
             // 
@@ -346,7 +339,6 @@
         private ToolStripMenuItem clearBackgroundToolStripMenuItem;
         private ToolStripMenuItem actionToolStripMenuItem;
         private ToolStripMenuItem moveTo00ToolStripMenuItem;
-        private ToolStripMenuItem resetOriginToolStripMenuItem;
         private ToolStripMenuItem configureDeviceToolStripMenuItem;
         private Label label3;
         private NumericUpDown intensitySetter;

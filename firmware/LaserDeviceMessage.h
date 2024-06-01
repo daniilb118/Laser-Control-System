@@ -7,7 +7,7 @@ enum MessageType : uint8_t {
 	SetSpeed = 0,
 	SetBacklashX = 1,
 	SetBacklashY = 2,
-	ResetOrigin = 3,
+	DeclarePosition = 3,
 	AddTarget = 4,
 	ClearBuffer = 5,
 	Echo = 6,
@@ -34,10 +34,18 @@ struct TargetData {
 	uint8_t intensity;
 };
 
+struct PositionData {
+	uint16_t position[2];
+
+private:
+	uint8_t padder[1];
+};
+
 union MessageData {
 	SetSpeedData speedData;
 	SetBacklashData backlashData;
 	TargetData targetData;
+	PositionData positionData;
 };
 
 struct LaserDeviceMessage {

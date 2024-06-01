@@ -60,8 +60,8 @@ void processMessage(LaserDeviceMessage message) {
 		message.type = MessageType::Echo;
 		ioPort.send(message);
 		break;
-	case MessageType::ResetOrigin:
-//		planner.reset();
+	case MessageType::DeclarePosition:
+		laserDevice.declarePosition(data.positionData.position);
 		break;
 	}
 }

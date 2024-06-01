@@ -28,6 +28,8 @@ namespace laserControl
 
                 TargetLaserPosition = laserTrajectory.SelectedTarget.Position;
                 OnUserSelectedTargetChanged(new(targetPos, laserTrajectory.SelectedTarget.Intensity * intensityMultiplier));
+
+                MouseDown(sender, e, targetPos);
             };
 
             screenPanel.MouseMove += (object? sender, MouseEventArgs e) =>
@@ -56,6 +58,10 @@ namespace laserControl
         public delegate void OnUserSelectedTargetChangedDelegate(LaserDevice.Target target);
 
         public OnUserSelectedTargetChangedDelegate OnUserSelectedTargetChanged = delegate { };
+
+        public delegate void OnMouseDown(object? sender, MouseEventArgs e, Vector2 targetPosition);
+
+        public OnMouseDown MouseDown = delegate { };
 
         public int TrajectoryLength => laserTrajectory.Length;
 

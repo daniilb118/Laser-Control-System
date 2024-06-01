@@ -95,9 +95,10 @@ namespace laserControl
             }
         }
 
-        public void ResetOrigin()
+        public Vector2 Position
         {
-            ioPort.Send(LaserDeviceMessage.ResetOrigin());
+            //declares current laser position for synchronization (doesn't move laser)
+            set => ioPort.Send(LaserDeviceMessage.DeclarePosition(Profile.DiscreteMotorsPosition(value)));
         }
 
         public void ClearBuffer()
