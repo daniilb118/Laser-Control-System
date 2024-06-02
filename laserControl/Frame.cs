@@ -1,4 +1,6 @@
-﻿namespace laserControl
+﻿using NullFX.CRC;
+
+namespace laserControl
 {
     /// <summary>
     /// a data unit of IOPort protocol implementation
@@ -36,14 +38,13 @@
             Array.Copy(frameBytes, message, messageSize);
         }
 
-        //TODO: add checksum validation
-        public bool IsValid => true;
+        public bool IsValid => Crc8.ComputeChecksum(GetBytes()) == 0;
 
         public byte[] GetBytes() => [.. message, thisACK, thatACK, isAuxiliary, checksum];
 
         private void setChecksum()
         {
-            //TODO: add checksum computation
+            checksum = Crc8.ComputeChecksum(GetBytes(), 0, HeaderSize + message.Length - 1);
         }
     }
 }

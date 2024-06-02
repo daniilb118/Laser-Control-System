@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include "LFIFO.h"
+#include <CRC.h>
 
 struct FrameHeader {
 	uint8_t thisACK; //POV: sender
@@ -21,12 +22,12 @@ class IOPort {
 		FrameHeader	header;
 
 		bool validate() const {
-			//TODO: implement checksum
+			return calcCRC8((uint8_t*)this, sizeof(*this), CRC8_DVB_S2_POLYNOME) == 0;
 			return true;
 		}
 
 		void setChecksum() {
-			//TODO: implement checksum
+			header.checksum = calcCRC8((uint8_t*)this, sizeof(*this) - 1, CRC8_DVB_S2_POLYNOME);
 		}
 
 		Frame(
