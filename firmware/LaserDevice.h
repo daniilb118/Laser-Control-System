@@ -20,6 +20,8 @@ private:
 	Intensities intensities {};
 	int laserPin;
 	bool isStopping = false;
+	bool trajectoryEnded = true;
+	bool emergencyStopped = false;
 	uint8_t lastIntensity = 0;
 
 	void stopToClearBuffer() {
@@ -41,10 +43,20 @@ private:
 		planner.start();
 	}
 
+	void setLaserIntensity(uint8_t intensity) {
+		analogWrite(laserPin, intensity);
+	}
+
+	void emergencyStop() {
+		trajectoryEnded = true;
+		setLaserIntensity(lastIntensity);
+		emergencyStopped = true;
+	}
+
 public:
 	void onTargetInternal() {
 		lastIntensity = intensities.get();
-		analogWrite(laserPin, lastIntensity);
+		setLaserIntensity(lastIntensity);
 		intensities.next();
 		onTarget();
 	}
@@ -69,8 +81,13 @@ public:
 	}
 
 	void addTarget(int16_t position[], uint8_t intensity) {
+		trajectoryEnded = false;
 		planner.addTarget(position, 0);
 		intensities.add(intensity);
+		if (emergencyStopped) {
+			emergencyStopped = false;
+			setLaserIntensity(lastIntensity);
+		}
 	}
 
 	void clearBuffer() {
@@ -87,7 +104,17 @@ public:
 			isStopping = false;
 			clearBufferOnStop();
 		}
+		if (!trajectoryEnded && planner.getStatus() == 1 && planner.empty()) {
+			emergencyStop();
+		}
 		planner.tick();
+	}
+
+	void endTrajectory() {
+		trajectoryEnded = true;
+		if (!emergencyStopped) return;
+		emergencyStopped = false;
+		setLaserIntensity(lastIntensity);
 	}
 };
 

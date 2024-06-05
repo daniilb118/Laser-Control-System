@@ -13,6 +13,7 @@ enum MessageType : uint8_t {
 	Echo = 6,
 	TargetReached = 7,
 	DebugInfo = 8,
+	EndTrajectory = 9,
 };
 
 struct SetSpeedData {

@@ -63,6 +63,9 @@ void processMessage(LaserDeviceMessage message) {
 	case MessageType::DeclarePosition:
 		laserDevice.declarePosition(data.positionData.position);
 		break;
+	case MessageType::EndTrajectory:
+		laserDevice.endTrajectory();
+		break;
 	}
 }
 

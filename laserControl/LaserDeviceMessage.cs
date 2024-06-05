@@ -11,6 +11,7 @@
         Echo = 6,
         TargetReached = 7,
         DebugInfo = 8,
+        EndTrajectory = 9,
     }
 
     /// <summary>
@@ -46,6 +47,10 @@
         public static byte[] Echo()
         {
             return BuildCommand(LaserDeviceMessageType.Echo, []);
+        }
+        public static byte[] EndTrajectory()
+        {
+            return BuildCommand(LaserDeviceMessageType.EndTrajectory, []);
         }
         private static byte[] BuildCommand(LaserDeviceMessageType type, byte[] payload)
         {

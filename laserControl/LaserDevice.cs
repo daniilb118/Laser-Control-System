@@ -37,7 +37,10 @@ namespace laserControl
                 AddTarget(Trajectory.Current);
                 nextAvailable = moveNext();
             }
-            if (!nextAvailable) trajectory = null;
+            if (!nextAvailable) {
+                trajectory = null;
+                ioPort.Send(LaserDeviceMessage.EndTrajectory());
+            }
         }
 
         public LaserDevice(IOPort ioPort)
@@ -73,6 +76,7 @@ namespace laserControl
         {
             ClearBuffer();
             AddTarget(target);
+            ioPort.Send(LaserDeviceMessage.EndTrajectory());
         }
 
         private Int16[] compensatedMotorDiscretePosition(Vector2 laserPosition)
