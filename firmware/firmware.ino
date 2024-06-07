@@ -3,23 +3,17 @@
 #include "LaserDeviceMessage.h"
 #include "IOPort.h"
 #include "LaserDevice.h"
+#include "Configuration.h"
 
-constexpr int laserPin = 10;
-constexpr int baudRate = 9600;
-constexpr auto driverType = STEPPER4WIRE_HALF; //STEPPER2WIRE, STEPPER4WIRE, STEPPER4WIRE_HALF are available (details in "GyverStepper/src/StepperCore.h")
 
 void processMessage(LaserDeviceMessage);
 void onTarget();
 void onTargetInternal();
 
-using StepperT = Stepper<driverType>;
-
 IOPort<LaserDeviceMessage> ioPort {processMessage};
 using Device = LaserDevice<driverType, onTarget, onTargetInternal>;
 
 Device::Planner planner;
-StepperT stepper0(5, 3, 4, 2);
-StepperT stepper1(9, 7, 8, 6);
 
 Device laserDevice {planner, laserPin};
 
