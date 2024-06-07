@@ -8,6 +8,7 @@ namespace laserControl
     {
         private IOPort ioPort;
         private IEnumerator<Target>? trajectory;
+        private bool isBufferedTrajectoryEnded = true;
 
         /// <summary>
         /// device starts retracing setted trajectory after call
@@ -19,6 +20,7 @@ namespace laserControl
             {
                 ClearBuffer();
                 trajectory = value;
+                isBufferedTrajectoryEnded = false;
                 loadTargetsToDeviceBuffer();
             }
         }
@@ -37,9 +39,10 @@ namespace laserControl
                 AddTarget(Trajectory.Current);
                 nextAvailable = moveNext();
             }
-            if (!nextAvailable) {
+            if (!nextAvailable & !isBufferedTrajectoryEnded) {
                 trajectory = null;
                 ioPort.Send(LaserDeviceMessage.EndTrajectory());
+                isBufferedTrajectoryEnded = true;
             }
         }
 
@@ -77,6 +80,7 @@ namespace laserControl
             ClearBuffer();
             AddTarget(target);
             ioPort.Send(LaserDeviceMessage.EndTrajectory());
+            isBufferedTrajectoryEnded = true;
         }
 
         private Int16[] compensatedMotorDiscretePosition(Vector2 laserPosition)
@@ -110,6 +114,7 @@ namespace laserControl
             trajectory = null;
             bufferedTrajectoryLength = 0;
             ioPort.Send(LaserDeviceMessage.ClearBuffer());
+            isBufferedTrajectoryEnded = true;
         }
 
         private int trajectoryBufferLength => 32;
