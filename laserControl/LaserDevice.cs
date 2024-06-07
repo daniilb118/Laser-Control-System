@@ -6,9 +6,21 @@ namespace laserControl
 {
     public class LaserDevice
     {
-        private IOPort ioPort;
-        private IEnumerator<Target>? trajectory;
-        private bool isBufferedTrajectoryEnded = true;
+        public delegate void OnTargetReachDelegate();
+
+        public LaserDevice(IOPort ioPort)
+        {
+            this.ioPort = ioPort;
+            ioPort.OnReceive = message =>
+            {
+                if (message[5] == (byte)LaserDeviceMessageType.TargetReached)
+                {
+                    bufferedTrajectoryLength = Math.Max(0, bufferedTrajectoryLength - 1);
+                    loadTargetsToDeviceBuffer();
+                    OnTargetReach();
+                }
+            };
+        }
 
         /// <summary>
         /// device starts retracing setted trajectory after call
@@ -25,74 +37,7 @@ namespace laserControl
             }
         }
 
-        private bool moveNext() => Trajectory?.MoveNext() == true;
-
-        /// <summary>
-        /// transfers buffered trajectory until device buffer available or until trajectory completely transfered
-        /// </summary>
-        private void loadTargetsToDeviceBuffer()
-        {
-            var nextAvailable = moveNext();
-            while (nextAvailable & bufferAvailable > 16)
-            {
-                if (Trajectory == null) return; //unreachable
-                AddTarget(Trajectory.Current);
-                nextAvailable = moveNext();
-            }
-            if (!nextAvailable & !isBufferedTrajectoryEnded) {
-                trajectory = null;
-                ioPort.Send(LaserDeviceMessage.EndTrajectory());
-                isBufferedTrajectoryEnded = true;
-            }
-        }
-
-        public LaserDevice(IOPort ioPort)
-        {
-            this.ioPort = ioPort;
-            ioPort.OnReceive = message =>
-            {
-                if (message[5] == (byte)LaserDeviceMessageType.TargetReached)
-                {
-                    bufferedTrajectoryLength = Math.Max(0, bufferedTrajectoryLength - 1);
-                    loadTargetsToDeviceBuffer();
-                    OnTargetReach();
-                }
-            };
-        }
-
         public LaserDeviceProfile Profile { get; set; } = new();
-
-        /// <summary>
-        /// sends device-side profile properties to the device
-        /// </summary>
-        public void SendProfile()
-        {
-            ioPort.Send(LaserDeviceMessage.SetBacklashX(Profile.AxisXBacklash));
-            ioPort.Send(LaserDeviceMessage.SetBacklashY(Profile.AxisYBacklash));
-        }
-
-        /// <summary>
-        /// clears buffered trajectory and sends trajectory with the single target
-        /// discards remained trajectory that was set via LaserDevice.Trajectory
-        /// </summary>
-        public void SetTarget(Target target)
-        {
-            ClearBuffer();
-            AddTarget(target);
-            ioPort.Send(LaserDeviceMessage.EndTrajectory());
-            isBufferedTrajectoryEnded = true;
-        }
-
-        private Int16[] compensatedMotorDiscretePosition(Vector2 laserPosition)
-        {
-            return Profile.DiscreteMotorsPosition(Profile.Compensate(laserPosition / Profile.ScreenSize) * Profile.ScreenSize);
-        }
-
-        private void AddTarget(Target target)
-        {
-            bufferedTrajectoryLength = Math.Max(0, bufferedTrajectoryLength + 1);
-            ioPort.Send(LaserDeviceMessage.AddTarget(compensatedMotorDiscretePosition(target.Position), (byte)(target.Intensity * 255)));
-        }
 
         public UInt32 Speed
         {
@@ -109,6 +54,15 @@ namespace laserControl
             set => ioPort.Send(LaserDeviceMessage.DeclarePosition(Profile.DiscreteMotorsPosition(value)));
         }
 
+        /// <summary>
+        /// sends device-side profile properties to the device
+        /// </summary>
+        public void SendProfile()
+        {
+            ioPort.Send(LaserDeviceMessage.SetBacklashX(Profile.AxisXBacklash));
+            ioPort.Send(LaserDeviceMessage.SetBacklashY(Profile.AxisYBacklash));
+        }
+
         public void ClearBuffer()
         {
             trajectory = null;
@@ -117,13 +71,17 @@ namespace laserControl
             isBufferedTrajectoryEnded = true;
         }
 
-        private int trajectoryBufferLength => 32;
-
-        private int bufferedTrajectoryLength = 0;
-
-        private int bufferAvailable => trajectoryBufferLength - bufferedTrajectoryLength;
-
-        public delegate void OnTargetReachDelegate();
+        /// <summary>
+        /// clears buffered trajectory and sends trajectory with the single target
+        /// discards remained trajectory that was set via LaserDevice.Trajectory
+        /// </summary>
+        public void SetTarget(Target target)
+        {
+            ClearBuffer();
+            AddTarget(target);
+            ioPort.Send(LaserDeviceMessage.EndTrajectory());
+            isBufferedTrajectoryEnded = true;
+        }
 
         /// <summary>
         /// called when device physically reaches target of setted trajectory
@@ -152,6 +110,46 @@ namespace laserControl
                     Y = value.Y;
                 }
             }
+        }
+
+        /// <summary>
+        /// transfers buffered trajectory until device buffer available or until trajectory completely transfered
+        /// </summary>
+        private void loadTargetsToDeviceBuffer()
+        {
+            var nextAvailable = moveNext();
+            while (nextAvailable & bufferAvailable > 16)
+            {
+                if (Trajectory == null) return; //unreachable
+                AddTarget(Trajectory.Current);
+                nextAvailable = moveNext();
+            }
+            if (!nextAvailable & !isBufferedTrajectoryEnded)
+            {
+                trajectory = null;
+                ioPort.Send(LaserDeviceMessage.EndTrajectory());
+                isBufferedTrajectoryEnded = true;
+            }
+        }
+
+        private IOPort ioPort;
+        private IEnumerator<Target>? trajectory;
+        private bool isBufferedTrajectoryEnded = true;
+        private int bufferedTrajectoryLength = 0;
+
+        private bool moveNext() => Trajectory?.MoveNext() == true;
+        private int trajectoryBufferLength => 32;
+        private int bufferAvailable => trajectoryBufferLength - bufferedTrajectoryLength;
+
+        private Int16[] compensatedMotorDiscretePosition(Vector2 laserPosition)
+        {
+            return Profile.DiscreteMotorsPosition(Profile.Compensate(laserPosition / Profile.ScreenSize) * Profile.ScreenSize);
+        }
+
+        private void AddTarget(Target target)
+        {
+            bufferedTrajectoryLength = Math.Max(0, bufferedTrajectoryLength + 1);
+            ioPort.Send(LaserDeviceMessage.AddTarget(compensatedMotorDiscretePosition(target.Position), (byte)(target.Intensity * 255)));
         }
     }
 }

@@ -4,10 +4,6 @@ namespace laserControl
 {
     internal class LaserTrajectoryEditor
     {
-        private LaserTrajectory laserTrajectory;
-        private ScreenVisualizationPanel visualizationPanel;
-        private NumericUpDown intensitySetter;
-
         public LaserTrajectoryEditor(LaserDevice device, DataGridView targetGridView, Panel screenPanel, ToolStripLabel laserPositionLabel, NumericUpDown intensitySetter)
         {
             this.intensitySetter = intensitySetter;
@@ -102,6 +98,10 @@ namespace laserControl
             get => visualizationPanel.Background;
             set => visualizationPanel.Background = value;
         }
+
+        private LaserTrajectory laserTrajectory;
+        private ScreenVisualizationPanel visualizationPanel;
+        private NumericUpDown intensitySetter;
 
         private float intensityMultiplier => (float)intensitySetter.Value / 100;
 

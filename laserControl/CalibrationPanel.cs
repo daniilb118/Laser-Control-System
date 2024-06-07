@@ -8,11 +8,6 @@ namespace laserControl
     /// </summary>
     internal class CalibrationPanel
     {
-        static private int gridSize => LaserDeviceProfile.CompensationGridSize;
-
-        private CoordinatesPanel coordinatesPanel;
-        private LaserDeviceProfile profile;
-
         public CalibrationPanel(Panel panel, LaserDeviceProfile profile, ToolStripLabel label)
         {
             this.profile = profile;
@@ -82,5 +77,10 @@ namespace laserControl
                 graphics.DrawString(s, new Font("Arial", 8), Brushes.Black, coordinatesPanel.GetPanelPoint(gridPoint(i)));
             }
         }
+        static private int gridSize => LaserDeviceProfile.CompensationGridSize;
+
+        private CoordinatesPanel coordinatesPanel;
+        private LaserDeviceProfile profile;
+
     }
 }

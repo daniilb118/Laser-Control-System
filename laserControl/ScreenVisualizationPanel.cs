@@ -7,27 +7,6 @@ namespace laserControl
     /// </summary>
     internal class ScreenVisualizationPanel
     {
-        private CoordinatesPanel coordinatesPanel;
-        private int centerMarkSize = 10;
-        private int laserMarkSize = 10;
-        private Bitmap cachedStaticLayers = new Bitmap(10, 10);
-        private LaserDevice laserDevice;
-        private Vector2 laserPosition;
-        private Vector2 targetLaserPosition;
-        private Cursor cursor;
-        private Image? background = null;
-        private LaserTrajectory laserTrajectory;
-
-        public Image? Background
-        {
-            get => background;
-            set
-            {
-                background = value;
-                redraw();
-            }
-        }
-
         public ScreenVisualizationPanel(Panel laserControlPanel, LaserDevice laserDevice, LaserTrajectory laserTrajectory)
         {
             this.laserTrajectory = laserTrajectory;
@@ -42,10 +21,60 @@ namespace laserControl
             coordinatesPanel.backgroundPanel.Resize += (object? sender, EventArgs e) => redraw();
         }
 
+        public Image? Background
+        {
+            get => background;
+            set
+            {
+                background = value;
+                redraw();
+            }
+        }
+
         public Vector2 GetLaserPosition(Point mousePoint)
         {
             return coordinatesPanel.GetCoordinates(mousePoint) * laserDevice.Profile.ScreenSize;
         }
+
+        public Vector2 LaserPosition
+        {
+            get => laserPosition;
+            set
+            {
+                laserPosition = value;
+                drawDynamicLayer(drawDynamicLayers);
+            }
+        }
+
+        public Vector2 TargetLaserPosition
+        {
+            get => targetLaserPosition;
+            set
+            {
+                targetLaserPosition = value;
+                drawDynamicLayer(drawDynamicLayers);
+            }
+        }
+
+        public Vector2 CursorPosition
+        {
+            set
+            {
+                var location = coordinatesPanel.GetPanelPoint(value / laserDevice.Profile.ScreenSize);
+                cursor.Location = location;
+            }
+        }
+
+        private CoordinatesPanel coordinatesPanel;
+        private int centerMarkSize = 10;
+        private int laserMarkSize = 10;
+        private Bitmap cachedStaticLayers = new Bitmap(10, 10);
+        private LaserDevice laserDevice;
+        private Vector2 laserPosition;
+        private Vector2 targetLaserPosition;
+        private Cursor cursor;
+        private Image? background = null;
+        private LaserTrajectory laserTrajectory;
 
         private void drawDynamicLayer(Action<Graphics> draw)
         {
@@ -77,35 +106,6 @@ namespace laserControl
             visualizeTrajectory(graphics);
             visualizeLaserPosition(graphics, LaserPosition, new(Brushes.Blue));
             visualizeLaserPosition(graphics, TargetLaserPosition, new(Brushes.Red));
-        }
-
-        public Vector2 LaserPosition
-        {
-            get => laserPosition;
-            set
-            {
-                laserPosition = value;
-                drawDynamicLayer(drawDynamicLayers);
-            }
-        }
-
-        public Vector2 TargetLaserPosition
-        {
-            get => targetLaserPosition;
-            set
-            {
-                targetLaserPosition = value;
-                drawDynamicLayer(drawDynamicLayers);
-            }
-        }
-
-        public Vector2 CursorPosition
-        {
-            set
-            {
-                var location = coordinatesPanel.GetPanelPoint(value / laserDevice.Profile.ScreenSize);
-                cursor.Location = location;
-            }
         }
 
         private void drawStaticLayers()

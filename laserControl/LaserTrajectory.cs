@@ -10,11 +10,6 @@ namespace laserControl
     {
         public int Length => targetListSource.Rows.Count;
 
-        private DataGridView targetGridView;
-        private DataTable targetListSource = new();
-        private float screenSize;
-        private List<LaserDevice.Target> normalizedTargets;
-
         public LaserTrajectory(DataGridView targetGridView, float screenSize)
         {
             this.screenSize = screenSize;
@@ -76,6 +71,22 @@ namespace laserControl
             var normalizedPosition = laserPosition / ScreenSize;
             return Enumerable.Range(0, Length).MinBy(i => Vector2.Distance(NormalizedTargets[i].Position, normalizedPosition));
         }
+
+        public IEnumerable<LaserDevice.Target> GetTargets(int begin, int? end)
+        {
+            int index = begin;
+            while (index < (end ?? Length))
+            {
+                int oldIndex = index;
+                index = (end == null) ? (index + 1) % Length : index + 1;
+                yield return this[oldIndex];
+            }
+        }
+
+        private DataGridView targetGridView;
+        private DataTable targetListSource = new();
+        private float screenSize;
+        private List<LaserDevice.Target> normalizedTargets;
 
         private LaserDevice.Target targetFromDataRow(DataRow row)
         {
@@ -171,17 +182,6 @@ namespace laserControl
                 if (!isIntensity | e.Button != MouseButtons.Right) return;
                 targetListSource.Rows[e.RowIndex][2] = (float)(0 == this[e.RowIndex].Intensity ? 1 : 0);
             };
-        }
-
-        public IEnumerable<LaserDevice.Target> GetTargets(int begin, int? end)
-        {
-            int index = begin;
-            while (index < (end ?? Length))
-            {
-                int oldIndex = index;
-                index = (end == null) ? (index + 1) % Length : index + 1;
-                yield return this[oldIndex];
-            }
         }
     }
 }

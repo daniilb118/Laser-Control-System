@@ -34,6 +34,17 @@ namespace laserControl
             }
         }
 
+        public IOPort(SerialPort serialPort, int messageSize)
+        {
+            this.serialPort = serialPort;
+            this.messageSize = messageSize;
+            frameSize = messageSize + Frame.HeaderSize;
+            serialPort.DataReceived += (object sender, SerialDataReceivedEventArgs e) => Receive();
+            timer.Interval = responseTimeoutMs;
+            timer.AutoReset = true;
+            timer.Elapsed += (object? sender, ElapsedEventArgs e) => TrySend();
+        }
+
         private void SendAuxiliary()
         {
             var frame = new Frame(
@@ -122,17 +133,6 @@ namespace laserControl
         private static byte Next(byte num)
         {
             return (byte)((num == 255) ? 0 : num + 1);
-        }
-
-        public IOPort(SerialPort serialPort, int messageSize)
-        {
-            this.serialPort = serialPort;
-            this.messageSize = messageSize;
-            frameSize = messageSize + Frame.HeaderSize;
-            serialPort.DataReceived += (object sender, SerialDataReceivedEventArgs e) => Receive();
-            timer.Interval = responseTimeoutMs;
-            timer.AutoReset = true;
-            timer.Elapsed += (object? sender, ElapsedEventArgs e) => TrySend();
         }
     }
 }
