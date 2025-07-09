@@ -1,0 +1,6 @@
+[submodule "ArduinoLibs/GyverStepper"]
+	path = ArduinoLibs/GyverStepper
+	url = https://github.com/daniilb118/GyverStepper/
+[submodule "ArduinoLibs/CRC"]
+	path = ArduinoLibs/CRC
+	url = https://github.com/RobTillaart/CRC
